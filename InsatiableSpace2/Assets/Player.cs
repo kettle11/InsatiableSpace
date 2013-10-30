@@ -2,18 +2,18 @@
 using System.Collections;
 
 public class Player : MonoBehaviour {
-
 	// Use this for initialization
 	void Start () {
-	
+		
 	}
-	
 	
 	Vector3 velocity;
 	Vector3 destination;
 	
 	public float speed = 5f;
 	public float acceleration = .1f;
+	
+	public float foodAmount = 0;
 	
 	
 	//It'd be nice if there was some tweening on movement, so the ship would slow down gradually as approaching its goal

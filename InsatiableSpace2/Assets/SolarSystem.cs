@@ -3,13 +3,13 @@ using System.Collections;
 
 public class SolarSystem : MonoBehaviour {
 	
-	public int numberOfPlanets = 10;
+	public int numberOfPlanets = 20;
 	public float radius = 10;
 	
 	public float moonChance = .3f;
 	public float planetSpeed = .05f;
 	
-	public float planetSpacing = 20f;
+	public float planetSpacing = 2f;
 	public Planet planet;
 	
 	
@@ -25,7 +25,8 @@ public class SolarSystem : MonoBehaviour {
 			Planet newPlanet = Instantiate(planet, new Vector3(0, 0, 0), Quaternion.identity) as Planet;
 			newPlanet.orbiting = sun.transform;
 			newPlanet.orbitSpeed = Random.value * planetSpeed;
-			newPlanet.orbitRadius = currentRadius + Random.value * planetSpacing;
+			newPlanet.orbitRadius = planetSpacing;
+			planetSpacing = newPlanet.orbitRadius + 4f;
 			newPlanet.transform.localScale = new Vector3(3f,3f,3f) * Random.value;
 			currentRadius += newPlanet.transform.localScale.x;
 			
@@ -33,24 +34,20 @@ public class SolarSystem : MonoBehaviour {
 			if (newPlanet.planetRandomizer < 250) {      // Terra
 				newPlanet.planetType = "Terra";
 				newPlanet.foodGiven = 10f;
-				newPlanet.orbitRadius = 5;
 			}
 			else if (newPlanet.planetRandomizer < 500) { // Gas
 				newPlanet.planetType = "Gas";
 				newPlanet.foodGiven = 5f;
-				newPlanet.orbitRadius = 10;
 			}
 			
 			else if (newPlanet.planetRandomizer < 750) { // Rock
 				newPlanet.planetType = "Rock";
 				newPlanet.foodGiven = 2f;
-				newPlanet.orbitRadius = 15;
 			}
 			
 			else {                               // Water
 				newPlanet.planetType = "Water";
 				newPlanet.foodGiven = 5f;
-				newPlanet.orbitRadius = 20;
 			}
 			
 			if(Random.value < moonChance)//It'd be cool if the moons could rotate on any axis, but that requires more code.
