@@ -7,9 +7,9 @@ public class SolarSystem : MonoBehaviour {
 	public float radius = 10;
 	
 	public float moonChance = .3f;
-	public float planetSpeed = .05f;
+	public float planetSpeed = .1f;
 	
-	public float planetSpacing = 10f;
+	public float planetSpacing = 20f;
 	public Planet planet;
 	
 	
@@ -18,7 +18,7 @@ public class SolarSystem : MonoBehaviour {
 	
 		
 		Planet sun = Instantiate(planet, new Vector3(0, 0, 0), Quaternion.identity) as Planet;
-		sun.transform.localScale = new Vector3(5f,5f,5f);
+		sun.transform.localScale = new Vector3(15f,15f,15f);
 		float currentRadius = sun.transform.localScale.x;
 		for(int i = 0 ; i < numberOfPlanets; i++)
 		{
@@ -26,8 +26,8 @@ public class SolarSystem : MonoBehaviour {
 			newPlanet.orbiting = sun.transform;
 			newPlanet.orbitSpeed = Random.value * planetSpeed;
 			newPlanet.orbitRadius = planetSpacing;
-			planetSpacing = newPlanet.orbitRadius + (8f * Random.value + 2);
-			newPlanet.transform.localScale = new Vector3(3f,3f,3f) * Random.value;
+			planetSpacing = newPlanet.orbitRadius + (15f * Random.value + 10);
+			newPlanet.transform.localScale = new Vector3(10f,10f,10f) * Random.value;
 			currentRadius += newPlanet.transform.localScale.x;
 			
 			newPlanet.planetRandomizer = Random.value * 1000f;
