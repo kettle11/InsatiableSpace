@@ -3,13 +3,13 @@ using System.Collections;
 
 public class SolarSystem : MonoBehaviour {
 	
-	public int numberOfPlanets = 20;
+	public int numberOfPlanets = 10;
 	public float radius = 10;
 	
 	public float moonChance = .3f;
 	public float planetSpeed = .05f;
 	
-	public float planetSpacing = 2f;
+	public float planetSpacing = 10f;
 	public Planet planet;
 	
 	
@@ -26,7 +26,7 @@ public class SolarSystem : MonoBehaviour {
 			newPlanet.orbiting = sun.transform;
 			newPlanet.orbitSpeed = Random.value * planetSpeed;
 			newPlanet.orbitRadius = planetSpacing;
-			planetSpacing = newPlanet.orbitRadius + 4f;
+			planetSpacing = newPlanet.orbitRadius + (8f * Random.value + 2);
 			newPlanet.transform.localScale = new Vector3(3f,3f,3f) * Random.value;
 			currentRadius += newPlanet.transform.localScale.x;
 			
@@ -52,7 +52,7 @@ public class SolarSystem : MonoBehaviour {
 			
 			if(Random.value < moonChance)//It'd be cool if the moons could rotate on any axis, but that requires more code.
 			{
-				int numMoons = (int)(Random.value * 0); 
+				int numMoons = (int)(Random.value * 3); 
 				for(int j = 0; j < numMoons; j++)
 				{
 					Planet newMoon = Instantiate(planet, new Vector3(0, 0, 0), Quaternion.identity) as Planet;
