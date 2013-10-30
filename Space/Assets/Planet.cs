@@ -11,13 +11,17 @@ public class Planet : MonoBehaviour {
 	}
 	
 	 void OnTriggerEnter(Collider other) {
-		if(started)
-       		Destroy(other.gameObject);
+		//if(started)
+       	//	Destroy(other.gameObject);
     }
 	
 	public Transform orbiting; 
 	public float orbitSpeed = .2f;
 	public float orbitRadius = 3f;
+	
+	public float planetRandomizer;
+	public string planetType;
+	public float foodGiven;
 	
 	float angle;
 	

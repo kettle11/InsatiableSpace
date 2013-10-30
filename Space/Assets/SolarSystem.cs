@@ -29,6 +29,30 @@ public class SolarSystem : MonoBehaviour {
 			newPlanet.transform.localScale = new Vector3(3f,3f,3f) * Random.value;
 			currentRadius += newPlanet.transform.localScale.x;
 			
+			newPlanet.planetRandomizer = Random.value * 1000f;
+			if (newPlanet.planetRandomizer < 250) {      // Terra
+				newPlanet.planetType = "Terra";
+				newPlanet.foodGiven = 10f;
+				newPlanet.orbitRadius = 5;
+			}
+			else if (newPlanet.planetRandomizer < 500) { // Gas
+				newPlanet.planetType = "Gas";
+				newPlanet.foodGiven = 5f;
+				newPlanet.orbitRadius = 10;
+			}
+			
+			else if (newPlanet.planetRandomizer < 750) { // Rock
+				newPlanet.planetType = "Rock";
+				newPlanet.foodGiven = 2f;
+				newPlanet.orbitRadius = 15;
+			}
+			
+			else {                               // Water
+				newPlanet.planetType = "Water";
+				newPlanet.foodGiven = 5f;
+				newPlanet.orbitRadius = 20;
+			}
+			
 			if(Random.value < moonChance)//It'd be cool if the moons could rotate on any axis, but that requires more code.
 			{
 				int numMoons = (int)(Random.value * 0); 
