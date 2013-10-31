@@ -1,10 +1,11 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\GUITest.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Player.cs">
     <Files>
-      <File FileName="Assets\Player.cs" Line="16" Column="28" />
-      <File FileName="Assets\GUITest.cs" Line="12" Column="47" />
+      <File FileName="Assets\Player.cs" Line="27" Column="23" />
       <File FileName="Assets\CameraFollow.cs" Line="22" Column="4" />
+      <File FileName="Assets\Planet.cs" Line="20" Column="26" />
+      <File FileName="Assets\SolarSystem.cs" Line="33" Column="33" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
