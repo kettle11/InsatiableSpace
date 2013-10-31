@@ -15,6 +15,18 @@ public class Player : MonoBehaviour {
 	
 	public float foodAmount = 0;
 	
+	void OnTriggerEnter(Collider other) {
+		string sub = other.gameObject.name.Substring(0, 6);
+		//Debug.Log(sub);
+		if(sub.Equals("Planet")){
+			Debug.Log(other.gameObject.name);
+			
+		}
+	
+		//if(started)
+       		//Destroy(other.gameObject);
+    }
+	
 	
 	//It'd be nice if there was some tweening on movement, so the ship would slow down gradually as approaching its goal
 	// Update is called once per frame
@@ -28,6 +40,7 @@ public class Player : MonoBehaviour {
 		 	 
 			 Vector3 pointHit = ray.GetPoint(distance);
 			 destination = pointHit;
+			
 		}
 		
 		if((transform.position - destination).magnitude > .1f)

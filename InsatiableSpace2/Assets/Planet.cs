@@ -10,10 +10,7 @@ public class Planet : MonoBehaviour {
 		started = true;
 	}
 	
-	 void OnTriggerEnter(Collider other) {
-		//if(started)
-       	//	Destroy(other.gameObject);
-    }
+	 
 	
 	public Transform orbiting; 
 	public float orbitSpeed = .2f;
