@@ -9,27 +9,27 @@ public class Planet : MonoBehaviour {
 	
 	bool started = false;
 
-	Planet clone; //A clone planet used for rendering a preview of the future.
+	GameObject clone; //A clone planet used for rendering a preview of the future.
 	
 	[HideInInspector]
 	public bool cloned = false;
+	
+	public GameObject planetPreview;
 	
 	// Use this for initialization
 	void Start () {
 		angle = Random.value * Mathf.PI * 2f;
 		started = true;
-		
-		
+
 		//Sets up clone 
 		//To-fix: Frequently (always?) clones a clone of each clone.
 		if(!cloned)
 		{
-			this.enabled = false;
-			clone = Instantiate(this, new Vector3(0, 0, 0), Quaternion.identity) as Planet;
-			clone.cloned = true;
+			clone = Instantiate(planetPreview, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+			//clone.cloned = true;
+			clone.transform.localScale = transform.localScale;
 			clone.renderer.material = previewMaterial;
 			clone.renderer.enabled = false;
-			clone.enabled = false;
 		}
 		this.enabled = true;
 	}
