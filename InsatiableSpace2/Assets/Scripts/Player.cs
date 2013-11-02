@@ -18,7 +18,8 @@ public class Player : MonoBehaviour {
 	void OnTriggerEnter(Collider other) {
 		string sub = other.gameObject.name.Substring(0, 6);
 		//Debug.Log(sub);
-		if(sub.Equals("Planet")){
+		Planet otherPlanet = other.GetComponent<Planet>();
+		if(sub.Equals("Planet") && otherPlanet.cloned == false){
 			Planet mosthelpfulthingintheworld = other.GetComponent <Planet>();
 			trigger = true;
 			string testme = mosthelpfulthingintheworld.planetType;
@@ -137,6 +138,12 @@ public class Player : MonoBehaviour {
 		SolarSystem.timeAhead = calculateTime();
 	}
 	
+	public void reachDestination()
+	{
+		SolarSystem.timeRunning = false;
+		SolarSystem.timeAhead = 0f;
+	}
+	
 	//It'd be nice if there was some tweening on movement, so the ship would slow down gradually as approaching its goal
 	// Update is called once per frame
 	
@@ -176,7 +183,7 @@ public class Player : MonoBehaviour {
 		
 		if(SolarSystem.timeRunning)
 		{
-			if((transform.position - destination).magnitude > 2f)
+			if((transform.position - destination).magnitude > .2f)
 			{
 				velocity = (destination - transform.position).normalized * speed;
 				rotation = Quaternion.AngleAxis(Mathf.Rad2Deg * Mathf.Atan2(-velocity.z, velocity.x) - 90, Vector3.up) *  Quaternion.AngleAxis(270, Vector3.right);
@@ -184,6 +191,8 @@ public class Player : MonoBehaviour {
 			else
 			{
 				velocity = Vector3.zero;
+				transform.position = destination;
+				reachDestination();
 			}
 			
 			transform.rotation = rotation;

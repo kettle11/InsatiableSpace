@@ -20,7 +20,8 @@ public class Planet : MonoBehaviour {
 		started = true;
 		
 		
-		//Sets up clone
+		//Sets up clone 
+		//To-fix: Frequently (always?) clones a clone of each clone.
 		if(!cloned)
 		{
 			this.enabled = false;
@@ -35,7 +36,7 @@ public class Planet : MonoBehaviour {
 	
 	 
 	
-	public Transform orbiting; 
+	public Planet orbiting; 
 	public float orbitSpeed = .2f;
 	public float orbitRadius = 3f;
 	
@@ -45,9 +46,14 @@ public class Planet : MonoBehaviour {
 	
 	float angle;
 	
-	Vector3 getPositionAtAngle(float angle)
+	public Vector3 getPositionAtTimeAhead(float timeAhead)
 	{
-		return orbiting.position + orbitRadius * new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle));
+		if(orbiting == null)
+		{
+			return transform.position;
+		}
+		
+		return orbiting.getPositionAtTimeAhead(timeAhead) + orbitRadius * new Vector3(Mathf.Cos(angle + timeAhead * orbitSpeed), 0, Mathf.Sin(angle + timeAhead * orbitSpeed));
 	}
 	// Update is called once per frame
 	void Update () {
@@ -56,7 +62,7 @@ public class Planet : MonoBehaviour {
 			if(orbiting != null)
 			{
 				angle += orbitSpeed * Time.deltaTime;
-				transform.position = getPositionAtAngle(angle);
+				transform.position = getPositionAtTimeAhead(0f);
 				if(angle > 2f * Mathf.PI)
 				{
 					angle -= 2f * Mathf.PI;
@@ -75,16 +81,17 @@ public class Planet : MonoBehaviour {
 	
 	//Render a preview of what's to come.
 	void RenderAhead () {
+		
 		LineRenderer lineRenderer = GetComponent<LineRenderer>();
 		lineRenderer.SetVertexCount(lineResolution+1);
 		
 		if(!SolarSystem.timeRunning)
 		{
 			clone.renderer.enabled = true;
-			clone.renderer.transform.position = getPositionAtAngle(angle + SolarSystem.timeAhead * orbitSpeed);
+			clone.renderer.transform.position = getPositionAtTimeAhead(SolarSystem.timeAhead);
 			for(int i = 0; i <= lineResolution; i++)
 			{
-				lineRenderer.SetPosition(i, getPositionAtAngle(angle + SolarSystem.timeAhead * ((float)i / (float)lineResolution) * orbitSpeed));
+				lineRenderer.SetPosition(i, getPositionAtTimeAhead(((float)i / (float)lineResolution) * SolarSystem.timeAhead));
 			}
 			lineRenderer.enabled = true;
 		}

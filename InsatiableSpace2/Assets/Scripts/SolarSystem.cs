@@ -59,7 +59,7 @@ public class SolarSystem : MonoBehaviour {
 				newPlanet.foodGiven = 5f;
 			}
 			
-			newPlanet.orbiting = sun.transform;
+			newPlanet.orbiting = sun;
 			newPlanet.orbitSpeed = Random.value * planetSpeed;
 			newPlanet.orbitRadius = planetSpacing;
 			planetSpacing = newPlanet.orbitRadius + (15f * Random.value + 10);
@@ -75,7 +75,7 @@ public class SolarSystem : MonoBehaviour {
 				for(int j = 0; j < numMoons; j++)
 				{
 					Planet newMoon = Instantiate(rockPlanet, new Vector3(0, 0, 0), Quaternion.identity) as Planet;
-					newMoon.orbiting = newPlanet.transform;
+					newMoon.orbiting = newPlanet;
 					newMoon.transform.localScale = newPlanet.transform.localScale * .1f; //Make the new moon smaller than its planet
 					newMoon.orbitRadius = newPlanet.transform.localScale.x * (Random.value + 1f); //Make sure it doesn't intersect the planet and then add a random distance to it.
 					newMoon.orbitSpeed *= 10f;
