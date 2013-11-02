@@ -14,6 +14,7 @@ public class Player : MonoBehaviour {
 	public float foodAmount = 0;
 	public float shipsAmount = 0;
 	public Texture aTexture;
+	
 	void OnTriggerEnter(Collider other) {
 		string sub = other.gameObject.name.Substring(0, 6);
 		//Debug.Log(sub);
@@ -125,12 +126,37 @@ public class Player : MonoBehaviour {
 	
 	 
 	
+	float calculateTime()
+	{
+		return(transform.position - destination).magnitude / speed; //Should be seconds until destination.
+	}
+	
+	public void setDestination(Vector3 setting)
+	{
+		destination = setting;
+		SolarSystem.timeAhead = calculateTime();
+	}
+	
 	//It'd be nice if there was some tweening on movement, so the ship would slow down gradually as approaching its goal
 	// Update is called once per frame
+	
+	Quaternion rotation;
+
 	void Update () {
+	
+		LineRenderer lineRenderer = GetComponent<LineRenderer>();
+		lineRenderer.enabled = !SolarSystem.timeRunning;
 		
+		if(lineRenderer.enabled)
+		{
+			lineRenderer.SetVertexCount(2);
+			lineRenderer.SetPosition(0, transform.position);
+			lineRenderer.SetPosition(1, destination);
+			
+			SolarSystem.timeAhead = calculateTime();
+		}
 		
-		if(Input.GetMouseButtonDown(0))
+		if(!SolarSystem.timeRunning && Input.GetMouseButton(0))
 		{
 			 Ray ray = Camera.main.ScreenPointToRay(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0));
 			 Plane p = new Plane(new Vector3(0,1,0), Vector3.zero);
@@ -138,19 +164,30 @@ public class Player : MonoBehaviour {
 			 p.Raycast(ray, out distance);
 		 	 
 			 Vector3 pointHit = ray.GetPoint(distance);
-			 destination = pointHit;
+			
+			 setDestination(pointHit);
+		}
+		
+		if(Input.GetKeyDown(KeyCode.Space))
+		{
+			 SolarSystem.timeRunning = !SolarSystem.timeRunning;
 			
 		}
 		
-		if((transform.position - destination).magnitude > .1f)
+		if(SolarSystem.timeRunning)
 		{
-			velocity = (destination - transform.position).normalized * speed;
+			if((transform.position - destination).magnitude > 2f)
+			{
+				velocity = (destination - transform.position).normalized * speed;
+				rotation = Quaternion.AngleAxis(Mathf.Rad2Deg * Mathf.Atan2(-velocity.z, velocity.x) - 90, Vector3.up) *  Quaternion.AngleAxis(270, Vector3.right);
+			}
+			else
+			{
+				velocity = Vector3.zero;
+			}
+			
+			transform.rotation = rotation;
+			transform.position += velocity * Time.deltaTime;
 		}
-		else
-		{
-			velocity = Vector3.zero;
-		}
-		
-		transform.position += velocity * Time.deltaTime;
 	}
 }

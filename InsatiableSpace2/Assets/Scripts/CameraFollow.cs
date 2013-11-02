@@ -8,6 +8,8 @@ public class CameraFollow : MonoBehaviour {
 	
 	public Transform following;
 	
+	public float scrollSpeed = 20f;
+	
 	// Use this for initialization
 	void Start () {
 	
@@ -20,5 +22,8 @@ public class CameraFollow : MonoBehaviour {
 			transform.position = following.transform.position + offset;
 			transform.LookAt(following.transform.position);
 		}
+		
+		offset += -Input.GetAxis("Mouse ScrollWheel") * offset.normalized * scrollSpeed;
+		
 	}
 }
