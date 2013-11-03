@@ -195,6 +195,12 @@ public class Player : MonoBehaviour {
 				reachDestination();
 			}
 			
+			if(velocity.magnitude > speed)
+			{
+				velocity = velocity.normalized * speed;
+			}
+		
+			
 			transform.rotation = rotation;
 			transform.position += velocity * Time.deltaTime;
 		}
