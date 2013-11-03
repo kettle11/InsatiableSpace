@@ -15,6 +15,14 @@ public class Player : MonoBehaviour {
 	public float shipsAmount = 0;
 	public Texture aTexture;
 	
+	public Texture titleTexture;
+	public bool titleBool = true;
+	public Texture storyTexture;
+	public bool storyBool = false;
+	public Texture controlTexture;
+	public bool controlBool = false;
+	
+	
 	void OnTriggerEnter(Collider other) {
 		string sub = other.gameObject.name.Substring(0, 6);
 		//Debug.Log(sub);
@@ -109,6 +117,18 @@ public class Player : MonoBehaviour {
 		if (trigger)
 			//6 hours to find the screen height and width, only to find out we need them in parentheses...
         	GUI.DrawTexture(new Rect(0, 0, (Screen.width), (Screen.height)), aTexture);
+		if (titleBool) {
+			titleTexture = Resources.Load("title") as Texture;
+			GUI.DrawTexture(new Rect(0, 0, (Screen.width), (Screen.height)), titleTexture);
+		}
+		if (storyBool) {
+			storyTexture = Resources.Load("story") as Texture;
+			GUI.DrawTexture(new Rect(0, 0, (Screen.width), (Screen.height)), storyTexture);
+		}
+		if (controlBool) {
+			controlTexture = Resources.Load("controls") as Texture;
+			GUI.DrawTexture(new Rect(0, 0, (Screen.width), (Screen.height)), controlTexture);
+		}
 		
 	}
 		//if(started)
@@ -178,6 +198,18 @@ public class Player : MonoBehaviour {
 		if(Input.GetKeyDown(KeyCode.Space))
 		{
 			 SolarSystem.timeRunning = !SolarSystem.timeRunning;
+			if (titleBool) {
+				titleBool = false;
+				storyBool = true;
+			}
+			else if (storyBool) {
+				storyBool = false;
+				controlBool = true;
+			}
+			else if (controlBool) {
+				controlBool = false;
+			}
+			
 			
 		}
 		
