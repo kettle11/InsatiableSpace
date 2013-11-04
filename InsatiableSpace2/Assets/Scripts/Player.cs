@@ -38,12 +38,14 @@ public class Player : MonoBehaviour {
 	
 	
 	void OnTriggerEnter(Collider other) {
-		string sub = other.gameObject.name.Substring(0, 6);
-		//Debug.Log(sub);
+		SolarSystem.timeRunning = false;
+		SolarSystem.timeAhead = 0f;
+		// Freeze when touching any planet, we also need to set the destination to the current location when this happens
 		Planet otherPlanet = other.GetComponent<Planet>();
-		if(sub.Equals("Planet") && otherPlanet.cloned == false){
+		if(other && otherPlanet.cloned == false && otherPlanet.visited == false){
 			Planet mosthelpfulthingintheworld = other.GetComponent <Planet>();
 			trigger = true;
+			other.GetComponent<Planet>().setvisit();
 			string testme = mosthelpfulthingintheworld.planetType;
 			float tequila = Random.value * 600f;
 			if (testme.Equals("Terra")){
@@ -60,68 +62,130 @@ public class Player : MonoBehaviour {
 			}
 		}		
 	}
+	public float foodgain;
+	public float shipgain;
 	public void Makeevent(int type, float rng){
+		// apparently not every planet is given a type....
+		// state 0 - 5 +food - food nothing -ship +ship
+		float state = 2;
+		foodgain = 0f;
+		shipgain = 0f;
+		aTexture = Resources.Load("TERRA/terra_neu") as Texture;
 		if(type == 1){
-			if(rng<= 100 )
+			if(rng<= 100 ){
 				aTexture = Resources.Load("TERRA/terra_bad") as Texture;
-		    else if(rng<= 200 && rng > 100)
+				state = 2;
+			}
+		    else if(rng<= 200 && rng > 100){
 				aTexture = Resources.Load("TERRA/terra_neu") as Texture;
-		    else if(rng<= 300 && rng > 200)
+				state = 2;
+			}
+		    else if(rng<= 300 && rng > 200){
 				aTexture = Resources.Load("TERRA/terra_good") as Texture;
-			else if(rng<= 400 && rng > 300)
+				state = 2;
+			}
+			else if(rng<= 400 && rng > 300){
 				aTexture = Resources.Load("TERRA/terra_trade_bad") as Texture;
-			else if(rng<= 500 && rng > 400)
+				state = 2;
+			}
+			else if(rng<= 500 && rng > 400){
 				aTexture = Resources.Load("TERRA/terra_trade_neu") as Texture;
-			else if(rng > 500)
+				state = 2;
+			}
+			else if(rng > 500){
 				aTexture = Resources.Load("TERRA/terra_trade_good") as Texture;
+				state = 2;
+			}
 		}
 		if(type == 2){
-			if(rng<= 100 )
+			if(rng<= 100 ){
 				aTexture = Resources.Load("GAS/gas_bad") as Texture;
-		    else if(rng<= 200 && rng > 100)
+				state = 2;
+			}
+		    else if(rng<= 200 && rng > 100){
 				aTexture = Resources.Load("GAS/gas_neu") as Texture;
-		    else if(rng<= 300 && rng > 200)
+				state = 2;
+			}
+		    else if(rng<= 300 && rng > 200){
 				aTexture = Resources.Load("GAS/gas_good") as Texture;
-			else if(rng<= 400 && rng > 300)
+				state = 2;
+			}
+			else if(rng<= 400 && rng > 300){
 				aTexture = Resources.Load("GAS/gas_ship_bad") as Texture;
-			else if(rng<= 500 && rng > 400)
+				state = 2;
+			}
+			else if(rng<= 500 && rng > 400){
 				aTexture = Resources.Load("GAS/gas_ship_neu") as Texture;
-			else if(rng > 500)
+				state = 2;
+			}
+			else if(rng > 500){
 				aTexture = Resources.Load("GAS/gas_ship_good") as Texture;
+				state = 2;
+			}
 		}
 		if(type == 3){
-			if(rng<= 66 )
+			if(rng<= 66 ){
 				aTexture = Resources.Load("ROCK/rock_asylum_bad") as Texture;
-		    else if(rng<= 132 && rng > 66)
+				state = 2;
+			}
+		    else if(rng<= 132 && rng > 66){
 				aTexture = Resources.Load("ROCK/rock_asylum_good") as Texture;
-		    else if(rng<= 198 && rng > 132)
+				state = 2;
+			}
+		    else if(rng<= 198 && rng > 132){
 				aTexture = Resources.Load("ROCK/rock_asylum_neu") as Texture;
-			else if(rng<= 264 && rng > 198)
+				state = 2;
+			}
+			else if(rng<= 264 && rng > 198){
 				aTexture = Resources.Load("ROCK/rock_good") as Texture;
-			else if(rng<= 330 && rng > 264)
+				state = 2;
+			}
+			else if(rng<= 330 && rng > 264){
 				aTexture = Resources.Load("ROCK/rock_bad") as Texture;
-			else if(rng<= 396 && rng > 330)
+				state = 2;
+			}
+			else if(rng<= 396 && rng > 330){
 				aTexture = Resources.Load("ROCK/rock_neu") as Texture;
-			else if(rng<= 462 && rng > 396)
+				state = 2;
+			}
+			else if(rng<= 462 && rng > 396){
 				aTexture = Resources.Load("ROCK/rock_starshipbase_good") as Texture;
-			else if(rng<= 528 && rng > 462)
+				state = 2;
+			}
+			else if(rng<= 528 && rng > 462){
 				aTexture = Resources.Load("ROCK/rock_starshipbase_bad") as Texture;
-			else if(rng > 528)
+				state = 2;
+			}
+			else if(rng > 528){
 				aTexture = Resources.Load("ROCK/rock_starshipbase_neu") as Texture;
+				state = 2;
+			}
 		}
 		if(type == 4){
-			if(rng<= 100 )
+			if(rng<= 100 ){
 				aTexture = Resources.Load("WATER/water_bad") as Texture;
-		    else if(rng<= 200 && rng > 100)
+				state = 2;
+			}
+		    else if(rng<= 200 && rng > 100){
 				aTexture = Resources.Load("WATER/water_neu") as Texture;
-		    else if(rng<= 300 && rng > 200)
+				state = 2;
+			}
+		    else if(rng<= 300 && rng > 200){
 				aTexture = Resources.Load("WATER/water_good") as Texture;
-			else if(rng<= 400 && rng > 300)
+				state = 2;
+			}
+			else if(rng<= 400 && rng > 300){
 				aTexture = Resources.Load("WATER/water_alien_neu") as Texture;
-			else if(rng<= 500 && rng > 400)
+				state = 2;
+			}
+			else if(rng<= 500 && rng > 400){
 				aTexture = Resources.Load("WATER/water_alien_bad") as Texture;
-			else if(rng > 500)
+				state = 2;
+			}
+			else if(rng > 500){
 				aTexture = Resources.Load("WATER/water_alien_good") as Texture;
+				state = 2;
+			}
 		}
 	}
 	void OnGUI () {
@@ -143,6 +207,9 @@ public class Player : MonoBehaviour {
 			controlTexture = Resources.Load("controls") as Texture;
 			GUI.DrawTexture(new Rect(0, 0, (Screen.width), (Screen.height)), controlTexture);
 		}
+		if (trigger)
+			if(GUI.Button(new Rect((Screen.width-200), (Screen.height-100), 100, 60), "OK"))
+            	trigger = false;
 		
 	}
 		//if(started)
@@ -152,7 +219,7 @@ public class Player : MonoBehaviour {
     {
 		string sub = other.gameObject.name.Substring(0, 6);
 		//Debug.Log(sub);
-		if(sub.Equals("Planet")){
+		if(other){
 			trigger = false;
 		}
     }

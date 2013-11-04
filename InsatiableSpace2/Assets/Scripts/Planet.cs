@@ -33,13 +33,16 @@ public class Planet : MonoBehaviour {
 		}
 		this.enabled = true;
 	}
-	
+	public void setvisit() {
+			visited = true;
+		
+	}
 	 
 	
 	public Planet orbiting; 
 	public float orbitSpeed = .2f;
 	public float orbitRadius = 3f;
-	
+	public bool visited = false;
 	public float planetRandomizer;
 	public string planetType;
 	public float foodGiven;
