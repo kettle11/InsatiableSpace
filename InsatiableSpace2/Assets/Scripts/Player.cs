@@ -4,8 +4,22 @@ using System.Collections;
 public class Player : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
-		
+		for(int i = 0; i < 100; i++)
+		{
+			addAiShip();
+		}
 	}
+	
+	public AIShip aiShip;
+	
+	public void addAiShip()
+	{
+		AIShip newShip = Instantiate(aiShip, transform.position, Quaternion.identity) as AIShip;
+		newShip.following = this.transform;
+		newShip.radius = 10f + Random.value * 10f;
+		newShip.calmRadius = newShip.calmRadius + Random.value * 10f;
+	}
+	
 	public bool trigger = false;
 	Vector3 velocity;
 	Vector3 destination;
