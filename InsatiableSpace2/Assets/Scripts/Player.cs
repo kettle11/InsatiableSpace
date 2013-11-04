@@ -66,19 +66,19 @@ public class Player : MonoBehaviour {
 	public float shipgain;
 	public void Makeevent(int type, float rng){
 		// apparently not every planet is given a type....
-		// state 0 - 5 +food - food nothing -ship +ship
-		float state = 2;
+		// state 0 - 8 nothing -food +food -ship +ship -both +both (-ships +food) (+ships -food)
+		float state = 0;
 		foodgain = 0f;
 		shipgain = 0f;
 		aTexture = Resources.Load("TERRA/terra_neu") as Texture;
 		if(type == 1){
 			if(rng<= 100 ){
 				aTexture = Resources.Load("TERRA/terra_bad") as Texture;
-				state = 2;
+				state = 7;
 			}
 		    else if(rng<= 200 && rng > 100){
 				aTexture = Resources.Load("TERRA/terra_neu") as Texture;
-				state = 2;
+				state = 0;
 			}
 		    else if(rng<= 300 && rng > 200){
 				aTexture = Resources.Load("TERRA/terra_good") as Texture;
@@ -86,89 +86,89 @@ public class Player : MonoBehaviour {
 			}
 			else if(rng<= 400 && rng > 300){
 				aTexture = Resources.Load("TERRA/terra_trade_bad") as Texture;
-				state = 2;
+				state = 3;
 			}
 			else if(rng<= 500 && rng > 400){
 				aTexture = Resources.Load("TERRA/terra_trade_neu") as Texture;
-				state = 2;
+				state = 0;
 			}
 			else if(rng > 500){
 				aTexture = Resources.Load("TERRA/terra_trade_good") as Texture;
-				state = 2;
+				state = 7;
 			}
 		}
 		if(type == 2){
 			if(rng<= 100 ){
 				aTexture = Resources.Load("GAS/gas_bad") as Texture;
-				state = 2;
+				state = 5;
 			}
 		    else if(rng<= 200 && rng > 100){
 				aTexture = Resources.Load("GAS/gas_neu") as Texture;
-				state = 2;
+				state = 0;
 			}
 		    else if(rng<= 300 && rng > 200){
 				aTexture = Resources.Load("GAS/gas_good") as Texture;
-				state = 2;
+				state = 6;
 			}
 			else if(rng<= 400 && rng > 300){
 				aTexture = Resources.Load("GAS/gas_ship_bad") as Texture;
-				state = 2;
+				state = 1;
 			}
 			else if(rng<= 500 && rng > 400){
 				aTexture = Resources.Load("GAS/gas_ship_neu") as Texture;
-				state = 2;
+				state = 0;
 			}
 			else if(rng > 500){
 				aTexture = Resources.Load("GAS/gas_ship_good") as Texture;
-				state = 2;
+				state = 4;
 			}
 		}
 		if(type == 3){
 			if(rng<= 66 ){
 				aTexture = Resources.Load("ROCK/rock_asylum_bad") as Texture;
-				state = 2;
+				state = 5;
 			}
 		    else if(rng<= 132 && rng > 66){
 				aTexture = Resources.Load("ROCK/rock_asylum_good") as Texture;
-				state = 2;
+				state = 4;
 			}
 		    else if(rng<= 198 && rng > 132){
 				aTexture = Resources.Load("ROCK/rock_asylum_neu") as Texture;
-				state = 2;
+				state = 0;
 			}
 			else if(rng<= 264 && rng > 198){
 				aTexture = Resources.Load("ROCK/rock_good") as Texture;
-				state = 2;
+				state = 7;
 			}
 			else if(rng<= 330 && rng > 264){
 				aTexture = Resources.Load("ROCK/rock_bad") as Texture;
-				state = 2;
+				state = 8;
 			}
 			else if(rng<= 396 && rng > 330){
 				aTexture = Resources.Load("ROCK/rock_neu") as Texture;
-				state = 2;
+				state = 0;
 			}
 			else if(rng<= 462 && rng > 396){
 				aTexture = Resources.Load("ROCK/rock_starshipbase_good") as Texture;
-				state = 2;
+				state = 7;
 			}
 			else if(rng<= 528 && rng > 462){
 				aTexture = Resources.Load("ROCK/rock_starshipbase_bad") as Texture;
-				state = 2;
+				state = 8;
 			}
 			else if(rng > 528){
 				aTexture = Resources.Load("ROCK/rock_starshipbase_neu") as Texture;
-				state = 2;
+				state = 0;
 			}
 		}
 		if(type == 4){
 			if(rng<= 100 ){
 				aTexture = Resources.Load("WATER/water_bad") as Texture;
-				state = 2;
+				state = 5;
 			}
 		    else if(rng<= 200 && rng > 100){
 				aTexture = Resources.Load("WATER/water_neu") as Texture;
-				state = 2;
+				state = 0;
 			}
 		    else if(rng<= 300 && rng > 200){
 				aTexture = Resources.Load("WATER/water_good") as Texture;
@@ -176,16 +176,69 @@ public class Player : MonoBehaviour {
 			}
 			else if(rng<= 400 && rng > 300){
 				aTexture = Resources.Load("WATER/water_alien_neu") as Texture;
-				state = 2;
+				state = 0;
 			}
 			else if(rng<= 500 && rng > 400){
 				aTexture = Resources.Load("WATER/water_alien_bad") as Texture;
-				state = 2;
+				state = 3;
 			}
 			else if(rng > 500){
 				aTexture = Resources.Load("WATER/water_alien_good") as Texture;
 				state = 2;
 			}
+		}
+		// state 0 - 8 nothing -food +food -ship +ship -both +both (-ships +food) (+ships -food)
+		if (state == 1){
+			Random random = new Random();
+			float randomNumber = random.Next(70, 200);
+			foodgain= randomNumber;
+			foodgain *= -1;
+		}
+		if (state == 2){
+			Random random = new Random();
+			float randomNumber = random.Next(100, 200);
+			foodgain= randomNumber;
+			if (type == 1 || type == 4){
+				foodgain += 100;
+				
+			}else
+				foodgain -= 20;
+			
+		}
+		if (state == 3){
+			Random random = new Random();
+			float randomNumber = random.Next(0, 100);
+			if (randomNumber < 80)
+				shipgain = -1f;
+			else
+				shipgain = -2f;
+			
+		}
+		if (state == 4){
+			Random random = new Random();
+			float randomNumber = random.Next(0, 100);
+			if (randomNumber < 70)
+				shipgain = 1f;
+			else
+				shipgain = 2f;
+			
+		}
+		if (state == 5){
+			foodgain= -1f;
+			shipgain= -1f;
+			
+		}
+		if (state == 6){
+			foodgain= 1f;
+			shipgain= 1f;
+		}
+		if (state == 7){
+			foodgain= 1f;
+			shipgain= -1f;
+		}
+		if (state == 8){
+			foodgain= -1f;
+			shipgain= 1f;
 		}
 	}
 	void OnGUI () {
