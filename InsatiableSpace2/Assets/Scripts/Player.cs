@@ -36,6 +36,11 @@ public class Player : MonoBehaviour {
 	public Texture controlTexture;
 	public bool controlBool = false;
 	
+	public Texture victoryTexture;
+	public bool victoryBool = false;
+	public Texture defeatTexture;
+	public bool defeatBool = false;
+	
 	
 	void OnTriggerEnter(Collider other) {
 		SolarSystem.timeRunning = false;
@@ -260,6 +265,14 @@ public class Player : MonoBehaviour {
 			controlTexture = Resources.Load("controls") as Texture;
 			GUI.DrawTexture(new Rect(0, 0, (Screen.width), (Screen.height)), controlTexture);
 		}
+		if (victoryBool) {
+			victoryTexture = Resources.Load("victory") as Texture;
+			GUI.DrawTexture(new Rect(0, 0, (Screen.width), (Screen.height)), victoryTexture);
+		}
+		if (defeatBool) {
+			defeatTexture = Resources.Load("defeat") as Texture;
+			GUI.DrawTexture(new Rect(0, 0, (Screen.width), (Screen.height)), defeatTexture);
+		}
 		if (trigger)
 			if(GUI.Button(new Rect((Screen.width-200), (Screen.height-100), 100, 60), "OK"))
             	trigger = false;
@@ -328,10 +341,17 @@ public class Player : MonoBehaviour {
 			
 			 setDestination(pointHit);
 		}
+		//Victory and loss conditions
+		if (foodAmount < -50) {
+			defeatBool = true;	
+		}
+		else if(foodAmount > 1000) {
+			victoryBool = true;
+		}
 		
 		if(Input.GetKeyDown(KeyCode.Space))
 		{
-			 SolarSystem.timeRunning = !SolarSystem.timeRunning;
+			SolarSystem.timeRunning = !SolarSystem.timeRunning;
 			if (titleBool) {
 				titleBool = false;
 				storyBool = true;
@@ -343,8 +363,9 @@ public class Player : MonoBehaviour {
 			else if (controlBool) {
 				controlBool = false;
 			}
-			
-			
+			if (victoryBool || defeatBool) {
+				Application.Quit();
+			}			
 		}
 		
 		if(SolarSystem.timeRunning)
