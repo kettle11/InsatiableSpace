@@ -3,23 +3,6 @@ using System.Collections;
 
 public class Player : MonoBehaviour {
 	// Use this for initialization
-	void Start () {
-		for(int i = 0; i < 100; i++)
-		{
-			addAiShip();
-		}
-	}
-	
-	public AIShip aiShip;
-	
-	public void addAiShip()
-	{
-		AIShip newShip = Instantiate(aiShip, transform.position, Quaternion.identity) as AIShip;
-		newShip.following = this.transform;
-		newShip.radius = 10f + Random.value * 10f;
-		newShip.calmRadius = newShip.calmRadius + Random.value * 10f;
-	}
-	
 	public bool trigger = false;
 	Vector3 velocity;
 	Vector3 destination;
@@ -40,6 +23,25 @@ public class Player : MonoBehaviour {
 	public bool victoryBool = false;
 	public Texture defeatTexture;
 	public bool defeatBool = false;
+	void Start () {
+		for(int i = 0; i < 100; i++)
+		{
+			addAiShip();
+		}
+		foodAmount = 1000;
+	}
+	
+	public AIShip aiShip;
+	
+	public void addAiShip()
+	{
+		AIShip newShip = Instantiate(aiShip, transform.position, Quaternion.identity) as AIShip;
+		newShip.following = this.transform;
+		newShip.radius = 10f + Random.value * 10f;
+		newShip.calmRadius = newShip.calmRadius + Random.value * 10f;
+	}
+	
+	
 	
 	
 	void OnTriggerEnter(Collider other) {
@@ -69,6 +71,7 @@ public class Player : MonoBehaviour {
 	}
 	public float foodgain;
 	public float shipgain;
+	public bool gaingain = false;
 	public void Makeevent(int type, float rng){
 		// apparently not every planet is given a type....
 		// state 0 - 8 nothing -food +food -ship +ship -both +both (-ships +food) (+ships -food)
@@ -194,14 +197,13 @@ public class Player : MonoBehaviour {
 		}
 		// state 0 - 8 nothing -food +food -ship +ship -both +both (-ships +food) (+ships -food)
 		if (state == 1){
-			Random random = new Random();
-			float randomNumber = random.Next(70, 200);
+			float randomNumber = (Random.value * 200)+70;
 			foodgain= randomNumber;
 			foodgain *= -1;
 		}
 		if (state == 2){
 			Random random = new Random();
-			float randomNumber = random.Next(100, 200);
+			float randomNumber = (Random.value * 200)+200;
 			foodgain= randomNumber;
 			if (type == 1 || type == 4){
 				foodgain += 100;
@@ -212,7 +214,7 @@ public class Player : MonoBehaviour {
 		}
 		if (state == 3){
 			Random random = new Random();
-			float randomNumber = random.Next(0, 100);
+			float randomNumber = (Random.value * 100);
 			if (randomNumber < 80)
 				shipgain = -1f;
 			else
@@ -221,7 +223,7 @@ public class Player : MonoBehaviour {
 		}
 		if (state == 4){
 			Random random = new Random();
-			float randomNumber = random.Next(0, 100);
+			float randomNumber = (Random.value * 100);
 			if (randomNumber < 70)
 				shipgain = 1f;
 			else
@@ -229,27 +231,70 @@ public class Player : MonoBehaviour {
 			
 		}
 		if (state == 5){
-			foodgain= -1f;
-			shipgain= -1f;
+			Random random = new Random();
+			float randomNumber = (Random.value * 200);
+			foodgain= -1f * randomNumber;
+			float randomNumber2 = (Random.value * 100);
+			if (randomNumber2 < 70)
+				shipgain = -1f;
+			else
+				shipgain = -2f;
 			
 		}
 		if (state == 6){
-			foodgain= 1f;
-			shipgain= 1f;
+			Random random = new Random();
+			float randomNumber = (Random.value * 200);
+			foodgain= 1f * randomNumber;
+			float randomNumber2 = (Random.value * 100);
+			if (randomNumber2 < 50)
+				shipgain = 1f;
+			else
+				shipgain = 2f;
 		}
 		if (state == 7){
-			foodgain= 1f;
-			shipgain= -1f;
+			Random random = new Random();
+			float randomNumber = (Random.value * 200);
+			foodgain= 1f * randomNumber;
+			float randomNumber2 = (Random.value * 100);
+			if (randomNumber2 < 70)
+				shipgain = -1f;
+			else
+				shipgain = -2f;
 		}
 		if (state == 8){
-			foodgain= -1f;
-			shipgain= 1f;
+			Random random = new Random();
+			float randomNumber = (Random.value * 200);
+			foodgain= -1f * randomNumber;
+			float randomNumber2 = (Random.value * 100);
+			if (randomNumber2 < 50)
+				shipgain = 1f;
+			else
+				shipgain = 2f;
 		}
+		gaingain = true;
+		shipsAmount += Mathf.Round(shipgain);
+		foodAmount += Mathf.Round(foodgain);
 	}
 	void OnGUI () {
 		// Make a background box
-		GUI.Label (new Rect (10, 10, 100, 20), "Food: "+  foodAmount);
-		GUI.Label (new Rect (10, 25, 100, 20), "Ships: "+  shipsAmount);
+		if(gaingain == false){
+			GUI.Label (new Rect (10, 10, 100, 20), "Food: "+  foodAmount);
+			GUI.Label (new Rect (10, 25, 100, 20), "Ships: "+  shipsAmount);
+		}
+		if (gaingain){
+			if(foodgain < 0){
+				GUI.Label (new Rect (10, 10, 100, 20), "Food: "+  foodAmount + " " + foodgain);
+			}
+			if(foodgain >= 0){
+				GUI.Label (new Rect (10, 10, 100, 20), "Food: "+  foodAmount + " +" + foodgain);
+			}
+			if(shipgain < 0){
+				GUI.Label (new Rect (10, 25, 100, 20), "Ships: "+  shipsAmount + " " + shipgain);
+			}
+			if(shipgain >= 0){
+				GUI.Label (new Rect (10, 25, 100, 20), "Ships: "+  shipsAmount + " +" + shipgain);
+			}
+		}
 		if (trigger)
 			//6 hours to find the screen height and width, only to find out we need them in parentheses...
         	GUI.DrawTexture(new Rect(0, 0, (Screen.width), (Screen.height)), aTexture);
@@ -342,10 +387,10 @@ public class Player : MonoBehaviour {
 			 setDestination(pointHit);
 		}
 		//Victory and loss conditions
-		if (foodAmount < -50) {
+		if (foodAmount < 0) {
 			defeatBool = true;	
 		}
-		else if(foodAmount > 1000) {
+		else if(foodAmount > 10000) {
 			victoryBool = true;
 		}
 		
