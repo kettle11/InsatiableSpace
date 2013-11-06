@@ -31,6 +31,15 @@ public class Planet : MonoBehaviour {
 		
 		this.enabled = true;
 	}
+	
+	
+	bool isMoon = false;
+	
+	public void setMoon() {
+		isMoon = true;
+		setvisit();
+	}
+	
 	public void setvisit() {
 			visited = true;
 		
@@ -77,11 +86,22 @@ public class Planet : MonoBehaviour {
 				}
 			}
 		}
-		else
-		{
-			RenderAhead();
-			//Vector2 point = Camera.main.WorldToScreenPoint(worldPosition);
-		}
+		
+		RenderAhead();
+		
+		
+		
+		
+	}
+
+	public GUISkin skin;
+	void OnGUI () {
+
+		GUI.skin = skin;
+		//Vector2 size = GUI.skin.GetStyle("ProgressBarText").CalcSize(GUIContent(label));
+		Vector3 point = Camera.main.WorldToScreenPoint(transform.position);
+
+		GUI.Label (new Rect (point.x, -point.y + Screen.height, 100, 20), "Planet");
 		
 	}
 	
@@ -92,14 +112,9 @@ public class Planet : MonoBehaviour {
 		
 		LineRenderer lineRenderer = GetComponent<LineRenderer>();
 		lineRenderer.SetVertexCount(lineResolution+1);
-
-		if(!SolarSystem.timeRunning)
+		
+		if(!SolarSystem.timeRunning && !isMoon)
 		{
-			if(clone == null)
-			{
- 				print("noo");
-			}
-			
 			clone.renderer.enabled = true;
 			clone.renderer.transform.position = getPositionAtTimeAhead(SolarSystem.timeAhead);
 			for(int i = 0; i <= lineResolution; i++)

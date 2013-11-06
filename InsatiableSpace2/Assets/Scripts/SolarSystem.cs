@@ -79,6 +79,7 @@ public class SolarSystem : MonoBehaviour {
 					newMoon.transform.localScale = newPlanet.transform.localScale * (Random.value * .1f + .1f); //Make the new moon smaller than its planet
 					newMoon.orbitRadius = newPlanet.transform.localScale.x * (Random.value + 1f); //Make sure it doesn't intersect the planet and then add a random distance to it.
 					newMoon.orbitSpeed *= 10f;
+					newMoon.setMoon();
 				}
 			}
 		}
