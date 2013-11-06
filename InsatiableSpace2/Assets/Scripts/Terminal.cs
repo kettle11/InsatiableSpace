@@ -15,7 +15,7 @@ public class Terminal : MonoBehaviour {
 	public GUISkin skin;
 	
 	public int rectHeight = 30;
-	public int rectWidth = 200;
+	public int rectWidth = 800;
 	
 	public int messageMax = 8;
 	

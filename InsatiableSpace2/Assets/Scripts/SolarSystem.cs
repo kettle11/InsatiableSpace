@@ -29,6 +29,8 @@ public class SolarSystem : MonoBehaviour {
 		Planet sun = Instantiate(sunPlanet, new Vector3(0, 0, 0), Quaternion.identity) as Planet;
 		sun.transform.localScale = new Vector3(15f,15f,15f);
 		float currentRadius = sun.transform.localScale.x;
+		sun.setMoon();
+		
 		for(int i = 0 ; i < numberOfPlanets; i++)
 		{
 			

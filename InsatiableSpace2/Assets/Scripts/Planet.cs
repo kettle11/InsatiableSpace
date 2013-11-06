@@ -92,11 +92,12 @@ public class Planet : MonoBehaviour {
 						else {
 							totalShips -= 1;
 							if (totalShips == 2) {
-								Terminal.addMessage("A planet is close to destruction.", 0);
+								Terminal.addMessage("A planet is close to destruction!", 0);
+								
 								//print("A planet is close to destruction");
 							}
 							if (totalShips == 0) {
-								Terminal.addMessage("A planet has been destroyed.", 0);
+								Terminal.addMessage("A planet has been destroyed!", 0);
 								//print ("A planet has been destroyed");
 								Destroy(this.gameObject);
 								Destroy(clone.gameObject);
@@ -149,16 +150,20 @@ public class Planet : MonoBehaviour {
 						Player.change();
 						Player.shipgain += 1;
 						currentShips -= 1;
+						Terminal.addMessage("Deposited 1 ship onto planet.", 1);
 					}
+					
 				
 				}
-				if (GUI.Button(new Rect(point.x, -point.y + Screen.height - 40, 200, 40), "Add Ship"))
+				if (GUI.Button(new Rect(point.x, -point.y + Screen.height - 40, 200, 40), "Leave Ship"))
 				{
 					if(Player.shipsAmount > 0){
 						Player.change2();
 						Player.shipgain -= 1;
 						currentShips += 1;
+						Terminal.addMessage("Took 1 ship from planet.", 1);
 					}
+
 				}
 			}
 			
