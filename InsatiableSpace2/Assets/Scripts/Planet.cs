@@ -186,7 +186,8 @@ public class Planet : MonoBehaviour {
 		Vector3 point = 
 			Camera.main.WorldToScreenPoint(transform.position + new Vector3(transform.localScale.x,0,0));
 		Vector3 point2 = 
-			Camera.main.WorldToScreenPoint(transform.position + new Vector3(0,0,transform.localScale.z)) - new Vector3(0,-10,0);
+			point - new Vector3(0, -60,0);
+			//Camera.main.WorldToScreenPoint(transform.position + new Vector3(0,0,transform.localScale.z)) - new Vector3(0,-10,0);
 		
 		if(Camera.main.pixelRect.Contains(point))
 		{
