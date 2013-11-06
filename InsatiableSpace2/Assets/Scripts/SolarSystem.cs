@@ -67,7 +67,7 @@ public class SolarSystem : MonoBehaviour {
 			currentRadius += newPlanet.transform.localScale.x;
 			
 			newPlanet.planetRandomizer = Random.value * 1000f;
-			
+			newPlanet.randomShipTime = (Random.value * 12) + 10;
 			
 			if(Random.value < moonChance)//It'd be cool if the moons could rotate on any axis, but that requires more code.
 			{
@@ -79,7 +79,7 @@ public class SolarSystem : MonoBehaviour {
 					newMoon.transform.localScale = newPlanet.transform.localScale * (Random.value * .1f + .1f); //Make the new moon smaller than its planet
 					newMoon.orbitRadius = newPlanet.transform.localScale.x * (Random.value + 1f); //Make sure it doesn't intersect the planet and then add a random distance to it.
 					newMoon.orbitSpeed *= 10f;
-					
+					newMoon.randomShipTime = newPlanet.randomShipTime;
 					newMoon.setMoon();
 				}
 			}

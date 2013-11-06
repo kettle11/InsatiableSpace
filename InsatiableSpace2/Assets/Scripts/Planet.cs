@@ -14,6 +14,16 @@ public class Planet : MonoBehaviour {
 	
 	public GameObject planetPreview;
 	
+	
+	public float currentShips = 2;
+	public float totalShips = 12;
+	[HideInInspector]
+	public float timeRunning;
+	[HideInInspector]
+	public bool isDecaying = false;	
+	[HideInInspector]
+	public float randomShipTime;
+	
 	// Use this for initialization
 	void Start () {
 		angle = Random.value * Mathf.PI * 2f;
@@ -50,6 +60,7 @@ public class Planet : MonoBehaviour {
 	public float orbitSpeed = .2f;
 	public float orbitRadius = 3f;
 	public bool visited = false;
+	[HideInInspector]
 	public float planetRandomizer;
 	public string planetType;
 	public float foodGiven;
@@ -74,6 +85,25 @@ public class Planet : MonoBehaviour {
 		{
 			if(orbiting != null)
 			{
+				timeRunning += Time.deltaTime;
+				if (timeRunning > randomShipTime) {
+					if (currentShips > 0) {
+						if (isDecaying == false) {
+							currentShips += 1;
+							if (currentShips >= totalShips) {
+								isDecaying = true;
+							}
+						}
+						else {
+							totalShips -= 1;
+							if (totalShips == 0) {
+								Destroy(this.gameObject);
+								Destroy(clone.gameObject);
+							}
+						}
+					}
+					timeRunning = 0;
+				}
 				angle += orbitSpeed * Time.deltaTime;
 				transform.position = getPositionAtTimeAhead(0f);
 				if(angle > 2f * Mathf.PI)
