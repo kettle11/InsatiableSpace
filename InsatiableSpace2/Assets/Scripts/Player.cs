@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Player : MonoBehaviour {
 	// Use this for initialization
@@ -23,22 +24,61 @@ public class Player : MonoBehaviour {
 	public bool victoryBool = false;
 	public Texture defeatTexture;
 	public bool defeatBool = false;
+	public float prevship = 0f;
+	
+	public List<AIShip> ships= new List<AIShip>();
 	void Start () {
-		for(int i = 0; i < 100; i++)
+		shipsAmount = 2; 
+        for (int i = 0; i < shipsAmount; i++)
+        {
+            AIShip newShip = Instantiate(aiShip, transform.position, Quaternion.identity) as AIShip;
+			newShip.following = this.transform;
+			newShip.radius = 10f + Random.value * 10f;
+			newShip.calmRadius = newShip.calmRadius + Random.value * 10f;
+			ships.Add(newShip);
+        }
+		
+		
+		
+		/*for(int i = 0; i < shipsAmount; i++)
 		{
 			addAiShip();
-		}
+		}*/
 		foodAmount = 1000;
 	}
 	
 	public AIShip aiShip;
 	
-	public void addAiShip()
+	public void fixAIShips()
 	{
-		AIShip newShip = Instantiate(aiShip, transform.position, Quaternion.identity) as AIShip;
-		newShip.following = this.transform;
-		newShip.radius = 10f + Random.value * 10f;
-		newShip.calmRadius = newShip.calmRadius + Random.value * 10f;
+		if (prevship == 0 && shipsAmount == 0){
+			return;
+		}
+		if (shipsAmount < 0){
+			for (int i = 0; i < ships.Capacity; i++)
+        	{
+			AIShip s = ships[i].GetComponent<AIShip>();
+			Destroy(s.gameObject);
+			return;
+			}
+		}
+		if(prevship != shipsAmount){
+		for (int i = 0; i < prevship; i++)
+        {
+     	AIShip s = ships[i].GetComponent<AIShip>();
+		
+		//ships.Remove(s);
+		Destroy(s.gameObject);
+		}
+		for (int i = 0; i < shipsAmount; i++)
+        {
+            AIShip newShip = Instantiate(aiShip, transform.position, Quaternion.identity) as AIShip;
+			newShip.following = this.transform;
+			newShip.radius = 10f + Random.value * 10f;
+			newShip.calmRadius = newShip.calmRadius + Random.value * 10f;
+			ships.Add(newShip);
+        }
+		}
 	}
 	
 	
@@ -267,10 +307,12 @@ public class Player : MonoBehaviour {
 				shipgain = 2f;
 		}
 		gaingain = true;
+		prevship = shipsAmount;
 		shipsAmount += Mathf.Round(shipgain);
 		foodAmount += Mathf.Round(foodgain);
 		if (shipsAmount < 0)
 			shipsAmount = 0;
+		fixAIShips();
 		prevtime = Time.time;
 	}
 	void OnGUI () {
