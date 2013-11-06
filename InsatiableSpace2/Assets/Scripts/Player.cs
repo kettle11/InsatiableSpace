@@ -44,7 +44,7 @@ public class Player : MonoBehaviour {
 		{
 			addAiShip();
 		}*/
-		foodAmount = 1000;
+		//foodAmount = 1000;
 	}
 	
 	public AIShip aiShip;
