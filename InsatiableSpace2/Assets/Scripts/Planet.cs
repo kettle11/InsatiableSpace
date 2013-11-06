@@ -5,8 +5,6 @@ using System.Collections;
 
 public class Planet : MonoBehaviour {
 	
-	public Material previewMaterial;
-	
 	bool started = false;
 
 	GameObject clone; //A clone planet used for rendering a preview of the future.
@@ -28,9 +26,9 @@ public class Planet : MonoBehaviour {
 			clone = Instantiate(planetPreview, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
 			//clone.cloned = true;
 			clone.transform.localScale = transform.localScale;
-			clone.renderer.material = previewMaterial;
 			clone.renderer.enabled = false;
 		}
+		
 		this.enabled = true;
 	}
 	public void setvisit() {
@@ -48,6 +46,9 @@ public class Planet : MonoBehaviour {
 	public float foodGiven;
 	
 	float angle;
+	
+	float foodAvailable = 15f;
+	float peopleHere = 0f;
 	
 	public Vector3 getPositionAtTimeAhead(float timeAhead)
 	{
@@ -76,7 +77,11 @@ public class Planet : MonoBehaviour {
 				}
 			}
 		}
-		RenderAhead();
+		else
+		{
+			RenderAhead();
+			//Vector2 point = Camera.main.WorldToScreenPoint(worldPosition);
+		}
 		
 	}
 	
@@ -87,9 +92,14 @@ public class Planet : MonoBehaviour {
 		
 		LineRenderer lineRenderer = GetComponent<LineRenderer>();
 		lineRenderer.SetVertexCount(lineResolution+1);
-		
+
 		if(!SolarSystem.timeRunning)
 		{
+			if(clone == null)
+			{
+ 				print("noo");
+			}
+			
 			clone.renderer.enabled = true;
 			clone.renderer.transform.position = getPositionAtTimeAhead(SolarSystem.timeAhead);
 			for(int i = 0; i <= lineResolution; i++)
@@ -104,5 +114,4 @@ public class Planet : MonoBehaviour {
 			clone.renderer.enabled = false;
 		}
 	}
-	
 }

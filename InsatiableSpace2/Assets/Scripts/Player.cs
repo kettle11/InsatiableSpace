@@ -44,6 +44,7 @@ public class Player : MonoBehaviour {
 	
 	
 	
+	
 	void OnTriggerEnter(Collider other) {
 		SolarSystem.timeRunning = false;
 		SolarSystem.timeAhead = 0f;
