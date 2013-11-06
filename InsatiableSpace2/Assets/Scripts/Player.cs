@@ -274,6 +274,8 @@ public class Player : MonoBehaviour {
 		gaingain = true;
 		shipsAmount += Mathf.Round(shipgain);
 		foodAmount += Mathf.Round(foodgain);
+		if (shipsAmount < 0)
+			shipsAmount = 0;
 	}
 	void OnGUI () {
 		// Make a background box
@@ -283,10 +285,10 @@ public class Player : MonoBehaviour {
 		}
 		if (gaingain){
 			if(foodgain < 0){
-				GUI.Label (new Rect (10, 10, 100, 20), "Food: "+  foodAmount + " " + foodgain);
+				GUI.Label (new Rect (10, 10, 100, 20), "Food: "+  foodAmount + " " + Mathf.Round(foodgain));
 			}
 			if(foodgain >= 0){
-				GUI.Label (new Rect (10, 10, 100, 20), "Food: "+  foodAmount + " +" + foodgain);
+				GUI.Label (new Rect (10, 10, 100, 20), "Food: "+  foodAmount + " +" + Mathf.Round(foodgain));
 			}
 			if(shipgain < 0){
 				GUI.Label (new Rect (10, 25, 100, 20), "Ships: "+  shipsAmount + " " + shipgain);
