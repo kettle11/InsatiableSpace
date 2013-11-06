@@ -432,7 +432,7 @@ public class Player : MonoBehaviour {
 			trigger = false;
 		}
 		if (trigger)
-			if(GUI.Button(new Rect((Screen.width-200), (Screen.height-100), 100, 60), okTexture))
+			if(GUI.Button(new Rect((Screen.width-200), (Screen.height-100), 100, 50), okTexture))
             	trigger = false;
 		
 		if(!SolarSystem.timeRunning )
@@ -494,10 +494,13 @@ public class Player : MonoBehaviour {
 	void Update () {
 		LineRenderer lineRenderer = GetComponent<LineRenderer>();
 		lineRenderer.enabled = !SolarSystem.timeRunning;
-		
-		if(ships.Count > 8)
+		if(ships.Count > 15)
 		{
-			realSpeed = speed * (1f + ships.Count / 10f) ; //Gives a speedboost with more ships.
+			realSpeed = speed * 2f ; //Gives a speedboost with more ships.
+		}
+		else if(ships.Count > 10)
+		{
+			realSpeed = speed * 1.5f ; //Gives a speedboost with more ships.
 		}
 		else
 		{

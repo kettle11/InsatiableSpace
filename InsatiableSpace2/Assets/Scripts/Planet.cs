@@ -12,7 +12,8 @@ public class Planet : MonoBehaviour {
 	
 	public GameObject planetPreview;
 	
-	
+	public bool test1 = false;
+	public bool test2 = false;
 	public float currentShips = 2;
 	public float totalShips = 12;
 	[HideInInspector]
@@ -84,6 +85,7 @@ public class Planet : MonoBehaviour {
 		if(SolarSystem.timeRunning)
 		{
 			foodAmount += (currentShips * currentShips * Time.deltaTime * foodGiven) / 8f; //Generate food!
+			growthRate = currentShips*.5f;
 			if(currentShips > 0 && !isMoon)
 			{
 				if(currentShips > totalShips)
@@ -95,12 +97,17 @@ public class Planet : MonoBehaviour {
 					currentShips += (randomShipTime * Time.deltaTime * (currentShips / 4f) * (currentShips / totalShips)) * growthRate;
 				}
 				
-				if (totalShips == 2) {
+				if (totalShips <= 2 && test1) {
 					Terminal.addMessage("A planet is close to destruction!", 0);
-					
+					test1 = false;
 					//print("A planet is close to destruction");
 				}
-				if (totalShips == 0) {
+				if (totalShips <= 1 && test2) {
+					Terminal.addMessage("A planet is nearing its end!", 0);
+					test1 = false;
+					//print("A planet is close to destruction");
+				}
+				if (totalShips < 0) {
 					Terminal.addMessage("A planet has been destroyed!", 0);
 					//print ("A planet has been destroyed");
 					Destroy(this.gameObject);
