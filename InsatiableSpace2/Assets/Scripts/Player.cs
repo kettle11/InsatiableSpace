@@ -24,6 +24,7 @@ public class Player : MonoBehaviour {
 	public Texture victoryTexture;
 	public bool victoryBool = false;
 	public Texture defeatTexture;
+	public Texture okTexture;
 	public bool defeatBool = false;
 	public float prevship = 0f;
 	
@@ -423,13 +424,15 @@ public class Player : MonoBehaviour {
 		if (victoryBool) {
 			victoryTexture = Resources.Load("victory") as Texture;
 			GUI.DrawTexture(new Rect(0, 0, (Screen.width), (Screen.height)), victoryTexture);
+			trigger = false;
 		}
 		if (defeatBool) {
 			defeatTexture = Resources.Load("defeat") as Texture;
 			GUI.DrawTexture(new Rect(0, 0, (Screen.width), (Screen.height)), defeatTexture);
+			trigger = false;
 		}
 		if (trigger)
-			if(GUI.Button(new Rect((Screen.width-200), (Screen.height-100), 100, 60), "OK"))
+			if(GUI.Button(new Rect((Screen.width-200), (Screen.height-100), 100, 60), okTexture))
             	trigger = false;
 		
 		if(!SolarSystem.timeRunning )
@@ -492,7 +495,7 @@ public class Player : MonoBehaviour {
 		LineRenderer lineRenderer = GetComponent<LineRenderer>();
 		lineRenderer.enabled = !SolarSystem.timeRunning;
 		
-		if(ships.Count > 4)
+		if(ships.Count > 8)
 		{
 			realSpeed = speed * (1f + ships.Count / 10f) ; //Gives a speedboost with more ships.
 		}
@@ -579,11 +582,10 @@ public class Player : MonoBehaviour {
 			counter += Time.deltaTime;
 			
 			
-			foodAmount -= (shipsAmount*3 + 5) * Time.deltaTime; //Subtracts food
-			
+			foodAmount -= (shipsAmount*5 + 5) * Time.deltaTime; //Subtracts food
+			foodgain -= shipsAmount*5 + 5;
 			if(counter >  2f){
 				counter = 0;
-				foodgain -= shipsAmount*5 + 5;
 				gaingain = true;
 				prevtime = Time.time;
 			}
