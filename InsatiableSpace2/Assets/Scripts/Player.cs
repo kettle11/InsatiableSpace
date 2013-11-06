@@ -481,7 +481,7 @@ public class Player : MonoBehaviour {
 			if(counter > 90f){
 				counter = 0;
 				foodAmount -= shipsAmount*5 + 5;
-				foodgain -= shipsAmount*5;
+				foodgain -= shipsAmount*5 + 5;
 				gaingain = true;
 				prevtime = Time.time;
 			}
