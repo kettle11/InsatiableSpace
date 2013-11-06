@@ -46,6 +46,7 @@ public class Player : MonoBehaviour {
 	
 	
 	void OnTriggerEnter(Collider other) {
+		audio.Play();
 		SolarSystem.timeRunning = false;
 		SolarSystem.timeAhead = 0f;
 		// Freeze when touching any planet, we also need to set the destination to the current location when this happens
