@@ -24,10 +24,10 @@ public class CameraFollow : MonoBehaviour {
 			transform.LookAt(following.transform.position);
 		}
 		if(Input.GetKeyDown(KeyCode.UpArrow)){
-			camera.fieldOfView += 5;
+			camera.fieldOfView -= 5;
 		}
 		if(Input.GetKeyDown(KeyCode.DownArrow)){
-			camera.fieldOfView -= 5;
+			camera.fieldOfView += 5;
 		}
 		
 		display += -Input.GetAxis("Mouse ScrollWheel") * offset.normalized * scrollSpeed;
