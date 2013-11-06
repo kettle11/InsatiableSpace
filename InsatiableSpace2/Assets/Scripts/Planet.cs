@@ -43,6 +43,7 @@ public class Planet : MonoBehaviour {
 	bool isMoon = false;
 	
 	public void setMoon() {
+		rigidbody.detectCollisions = false;
 		isMoon = true;
 		setvisit();
 	}

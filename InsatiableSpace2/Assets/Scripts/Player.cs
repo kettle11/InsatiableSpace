@@ -371,8 +371,6 @@ public class Player : MonoBehaviour {
     
 	 void OnTriggerExit( Collider other)
     {
-		string sub = other.gameObject.name.Substring(0, 6);
-		//Debug.Log(sub);
 		if(other){
 			trigger = false;
 		}
