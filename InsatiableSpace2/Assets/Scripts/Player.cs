@@ -406,29 +406,34 @@ public class Player : MonoBehaviour {
 				GUI.Label (new Rect (x, 70, 100, 20), ""+  (int)shipCount() + " +" + shipgain);
 			}
 		}
+		int widthSet = aTexture.width;
+		int heightSet = aTexture.height;
+		
+		float x1 = (Screen.width / 2f) - (widthSet / 2f);
+		float y1 = (Screen.height / 2f) - (heightSet / 2f);
 		if (trigger)
 			//6 hours to find the screen height and width, only to find out we need them in parentheses...
-        	GUI.DrawTexture(new Rect(0, 0, (Screen.width), (Screen.height)), aTexture);
+        	GUI.DrawTexture(new Rect(x1,y1, widthSet, heightSet), aTexture);
 		if (titleBool) {
 			titleTexture = Resources.Load("title") as Texture;
-			GUI.DrawTexture(new Rect(0, 0, (Screen.width), (Screen.height)), titleTexture);
+			GUI.DrawTexture(new Rect(x1,y1, widthSet, heightSet), titleTexture);
 		}
 		if (storyBool) {
 			storyTexture = Resources.Load("story") as Texture;
-			GUI.DrawTexture(new Rect(0, 0, (Screen.width), (Screen.height)), storyTexture);
+			GUI.DrawTexture(new Rect(x1,y1, widthSet, heightSet), storyTexture);
 		}
 		if (controlBool) {
 			controlTexture = Resources.Load("controls") as Texture;
-			GUI.DrawTexture(new Rect(0, 0, (Screen.width), (Screen.height)), controlTexture);
+			GUI.DrawTexture(new Rect(x1,y1, widthSet, heightSet), controlTexture);
 		}
 		if (victoryBool) {
 			victoryTexture = Resources.Load("victory") as Texture;
-			GUI.DrawTexture(new Rect(0, 0, (Screen.width), (Screen.height)), victoryTexture);
+			GUI.DrawTexture(new Rect(x1,y1, widthSet, heightSet), victoryTexture);
 			trigger = false;
 		}
 		if (defeatBool) {
 			defeatTexture = Resources.Load("defeat") as Texture;
-			GUI.DrawTexture(new Rect(0, 0, (Screen.width), (Screen.height)), defeatTexture);
+			GUI.DrawTexture(new Rect(1, 0, widthSet, heightSet), defeatTexture);
 			trigger = false;
 		}
 		if (trigger)
@@ -586,7 +591,7 @@ public class Player : MonoBehaviour {
 			
 			
 			foodAmount -= (shipsAmount*5 + 5) * Time.deltaTime; //Subtracts food
-			foodgain -= shipsAmount*5 + 5;
+			//foodgain -= (shipsAmount*5 + 5) * Time.deltaTime;
 			if(counter >  2f){
 				counter = 0;
 				gaingain = true;
