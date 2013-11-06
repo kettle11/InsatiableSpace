@@ -130,19 +130,17 @@ public class Planet : MonoBehaviour {
 		GUI.skin = skin;
 		//Vector2 size = GUI.skin.GetStyle("ProgressBarText").CalcSize(GUIContent(label));
 		Vector3 point = Camera.main.WorldToScreenPoint(transform.position);
-
 		
-		
-		if (GUI.Button(new Rect(point.x, -point.y + Screen.height - 40, 100, 20), "Take Ship"))
+		if (GUI.Button(new Rect(point.x, -point.y + Screen.height - 60, 200, 30), "Take Ship"))
 		{
 			currentShips -= 1;
 		}
-		if (GUI.Button(new Rect(point.x, -point.y + Screen.height - 20, 100, 20), "Add Ship"))
+		if (GUI.Button(new Rect(point.x, -point.y + Screen.height - 30, 200, 30), "Add Ship"))
 		{
 			currentShips += 1;
 		}
 		
-		GUI.Label (new Rect (point.x, -point.y + Screen.height, 100, 20), " " + currentShips + "/" + totalShips + " ");
+		GUI.Label (new Rect (point.x, -point.y + Screen.height, 200, 30), " " + currentShips + "/" + totalShips + " ");
 		
 	}
 	
