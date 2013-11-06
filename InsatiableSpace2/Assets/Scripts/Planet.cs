@@ -92,10 +92,12 @@ public class Planet : MonoBehaviour {
 						else {
 							totalShips -= 1;
 							if (totalShips == 2) {
-								print("A planet is close to destruction");
+								Terminal.addMessage("A planet is close to destruction.", 0);
+								//print("A planet is close to destruction");
 							}
 							if (totalShips == 0) {
-								print ("A planet has been destroyed");
+								Terminal.addMessage("A planet has been destroyed.", 0);
+								//print ("A planet has been destroyed");
 								Destroy(this.gameObject);
 								Destroy(clone.gameObject);
 							}
@@ -137,27 +139,31 @@ public class Planet : MonoBehaviour {
 		GUI.skin = skin;
 		//Vector2 size = GUI.skin.GetStyle("ProgressBarText").CalcSize(GUIContent(label));
 		Vector3 point = Camera.main.WorldToScreenPoint(transform.position);
-		if (istouching){
-			if (GUI.Button(new Rect(point.x, -point.y + Screen.height - 40, 100, 20), "Take Ship"))
-			{
-				if(currentShips > 0){
-					Player.change();
-					Player.shipgain += 1;
-					currentShips -= 1;
-				}
-			
-			}
-			if (GUI.Button(new Rect(point.x, -point.y + Screen.height - 20, 100, 20), "Add Ship"))
-			{
-				if(Player.shipsAmount > 0){
-					Player.change2();
-					Player.shipgain -= 1;
-					currentShips += 1;
-				}
-			}
-		}
 		
-		GUI.Label (new Rect (point.x, -point.y + Screen.height, 200, 30), " " + currentShips + "/" + totalShips + " ");
+		if(Camera.main.pixelRect.Contains(point))
+		{
+			if (istouching){
+				if (GUI.Button(new Rect(point.x, -point.y + Screen.height - 80, 200, 40), "Take Ship"))
+				{
+					if(currentShips > 0){
+						Player.change();
+						Player.shipgain += 1;
+						currentShips -= 1;
+					}
+				
+				}
+				if (GUI.Button(new Rect(point.x, -point.y + Screen.height - 40, 200, 40), "Add Ship"))
+				{
+					if(Player.shipsAmount > 0){
+						Player.change2();
+						Player.shipgain -= 1;
+						currentShips += 1;
+					}
+				}
+			}
+			
+			GUI.Label (new Rect (point.x, -point.y + Screen.height, 200, 40), " " + currentShips + "/" + totalShips + " ");
+		}
 		
 	}
 	
