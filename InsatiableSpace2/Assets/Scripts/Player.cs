@@ -418,6 +418,7 @@ public class Player : MonoBehaviour {
 
 	void Update () {
 		if(changed){
+			prevship = shipsAmount;
 			gaingain = true;
 			prevtime = Time.time;
 			shipsAmount += 1;
@@ -425,6 +426,7 @@ public class Player : MonoBehaviour {
 			fixAIShips();
 		}	
 		if(changed2){
+			prevship = shipsAmount;
 			gaingain = true;
 			prevtime = Time.time;
 			shipsAmount -= 1;
