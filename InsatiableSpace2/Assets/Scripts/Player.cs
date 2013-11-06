@@ -316,8 +316,10 @@ public class Player : MonoBehaviour {
 		prevtime = Time.time;
 	}
 	void OnGUI () {
-		if((Time.time - prevtime) > 5f){
+		if((Time.time - prevtime) > 2f){
 			gaingain = false;
+			shipgain = 0;
+			foodgain = 0;
 		}
 		// Make a background box
 		if(gaingain == false){
@@ -481,7 +483,7 @@ public class Player : MonoBehaviour {
 			if(counter > 90f){
 				counter = 0;
 				foodAmount -= shipsAmount*5 + 5;
-				foodgain -= shipsAmount*5;
+				foodgain -= shipsAmount*5 + 5;
 				gaingain = true;
 				prevtime = Time.time;
 			}
