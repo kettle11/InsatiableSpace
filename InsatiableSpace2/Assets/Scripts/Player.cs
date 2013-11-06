@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+
 using System.Collections;
 using System.Collections.Generic;
 
@@ -26,20 +27,22 @@ public class Player : MonoBehaviour {
 	public bool defeatBool = false;
 	public float prevship = 0f;
 	
-	public List<AIShip> ships= new List<AIShip>();
+	List<AIShip> ships= new List<AIShip>();
+	
+	public static Player currentPlayer;
+	
+	public int startShips = 2;
+	
+	Texture infoTexture;
+		
 	void Start () {
-		shipsAmount = 0; 
-        for (int i = 0; i < shipsAmount; i++)
+		infoTexture = Resources.Load("Top Readout") as Texture;
+		
+		currentPlayer = this;
+        for (int i = 0; i < startShips; i++)
         {
-            AIShip newShip = Instantiate(aiShip, transform.position, Quaternion.identity) as AIShip;
-			newShip.following = this.transform;
-			newShip.radius = 10f + Random.value * 10f;
-			newShip.calmRadius = newShip.calmRadius + Random.value * 10f;
-			ships.Add(newShip);
+            addShip();
         }
-		
-		
-		
 		/*for(int i = 0; i < shipsAmount; i++)
 		{
 			addAiShip();
@@ -47,81 +50,90 @@ public class Player : MonoBehaviour {
 		//foodAmount = 1000;
 	}
 	
-	public AIShip aiShip;
-	public static bool changed = false;
-	public static bool changed2 = false;
-	public static void change(){
-		changed = true;
-	}
-	public static void change2(){
-		changed2 = true;
+	public int shipCount()
+	{
+		return ships.Count;
 	}
 	
-	public void fixAIShips()
+	public void changeShips(int changing)
 	{
-		if (prevship >= 0 && shipsAmount == 0){
-			return;
-		}
-		if (shipsAmount < 0){
-			for (int i = 0; i < ships.Capacity; i++)
-        	{
-			AIShip s = ships[i].GetComponent<AIShip>();
-			Destroy(s.gameObject);
-			return;
+		for(int i = 0; i < Mathf.Abs(changing); i++)
+		{
+			if(changing > 0)
+			{
+				addShip();
+			}
+			else
+			{
+				removeShip();
 			}
 		}
-		if(prevship != shipsAmount){
-		for (int i = 0; i < prevship; i++)
-        {
-     	AIShip s = ships[i].GetComponent<AIShip>();
-		
-		//ships.Remove(s);
-		Destroy(s.gameObject);
-		}
-		for (int i = 0; i < shipsAmount; i++)
-        {
-            AIShip newShip = Instantiate(aiShip, transform.position, Quaternion.identity) as AIShip;
-			newShip.following = this.transform;
-			newShip.radius = 10f + Random.value * 10f;
-			newShip.calmRadius = newShip.calmRadius + Random.value * 10f;
-			ships.Add(newShip);
-        }
+	}
+	
+	public void addShip()
+	{
+		AIShip newShip = Instantiate(aiShip, transform.position, Quaternion.identity) as AIShip;
+		newShip.following = this.transform;
+		newShip.radius = 10f + Random.value * 10f;
+		newShip.calmRadius = newShip.calmRadius + Random.value * 10f;
+		ships.Add(newShip);
+	}
+	
+	public void removeShip()
+	{
+		if(ships.Count > 0)
+		{
+			Destroy(ships[ships.Count-1].gameObject);
+			ships.RemoveAt(ships.Count-1);
 		}
 	}
 	
-	
-	
-	
+	public AIShip aiShip;
 	
 	void OnTriggerEnter(Collider other) {
-		SolarSystem.timeRunning = false;
-		SolarSystem.timeAhead = 0f;
+		
+		print(other.GetType());
 		other.GetComponent<Planet>().touch(true);
 		// Freeze when touching any planet, we also need to set the destination to the current location when this happens
 		Planet otherPlanet = other.GetComponent<Planet>();
+		
+		if(other && otherPlanet.cloned == false)
+		{
+			SolarSystem.timeRunning = false;
+			SolarSystem.timeAhead = 0f;
+			otherPlanet.touch(true);
+		}
+		
 		if(other && otherPlanet.cloned == false && otherPlanet.visited == false){
 			audio.Play();
 			Planet mosthelpfulthingintheworld = other.GetComponent <Planet>();
-			trigger = true;
-			other.GetComponent<Planet>().setvisit();
-			string testme = mosthelpfulthingintheworld.planetType;
-			float tequila = Random.value * 600f;
-			if (testme.Equals("Terra")){
-				Makeevent(1,tequila);
-			}
-			if (testme.Equals("Gas")){
-				Makeevent(2,tequila);
-			}
-			if (testme.Equals("Rock")){
-				Makeevent(3,tequila);
-			}
-			if (testme.Equals("Water")){
-				Makeevent(4,tequila);
-			}
+			//trigger = true;
+			//other.GetComponent<Planet>().setvisit();
+			//string testme = mosthelpfulthingintheworld.planetType;
+			//float tequila = Random.value * 600f;
+			//triggerEvent(testme);
 		}		
 	}
+	
+	public void triggerEvent(string testme)
+	{
+		float tequila = Random.value * 600f;
+		if (testme.Equals("Terra")){
+			Makeevent(1,tequila);
+		}
+		if (testme.Equals("Gas")){
+			Makeevent(2,tequila);
+		}
+		if (testme.Equals("Rock")){
+			Makeevent(3,tequila);
+		}
+		if (testme.Equals("Water")){
+			Makeevent(4,tequila);
+		}
+	}
+	
 	public float foodgain;
-	public static float shipgain;
+	public float shipgain;
 	public bool gaingain = false;
 	public void Makeevent(int type, float rng){
 		// apparently not every planet is given a type....
@@ -315,38 +327,82 @@ public class Player : MonoBehaviour {
 			else
 				shipgain = 2f;
 		}
+		
 		gaingain = true;
-		prevship = shipsAmount;
-		shipsAmount += Mathf.Round(shipgain);
+		//prevship = shipsAmount;
+	//	shipsAmount += Mathf.Round(shipgain);
+		
+		if(shipgain != 0)
+		{
+			if(shipgain < 0)
+			{
+				if(shipgain == -1)
+				{
+					Terminal.addMessage("You lost a ship!", 1);
+				}
+				else
+				{
+					Terminal.addMessage("You lost "+Mathf.Abs(shipgain)+ " ships!", 1);
+				}
+			}
+			if(shipgain > 0)
+			{
+				if(shipgain == 1)
+				{
+					Terminal.addMessage("You gained a ship!", 1);
+				}
+				else
+				{
+					Terminal.addMessage("You gained "+shipgain+ " ships!", 1);
+				}
+			}
+		}
+		
+		if(foodgain != 0)
+		{
+			if(foodgain < 0)
+			{
+				Terminal.addMessage("You lost "+Mathf.Abs((int)foodgain)+ " food!", 1);
+			}
+			if(foodgain > 0)
+			{
+				
+				Terminal.addMessage("You gained "+(int)foodgain+ " food!", 1);
+			}
+		}
+		
+		changeShips((int)shipgain);
 		foodAmount += Mathf.Round(foodgain);
-		if (shipsAmount < 0)
-			shipsAmount = 0;
-		fixAIShips();
+		
 		prevtime = Time.time;
 	}
+	
 	void OnGUI () {
 		if((Time.time - prevtime) > 2f){
 			gaingain = false;
 			shipgain = 0;
 			foodgain = 0;
 		}
+		GUI.DrawTexture(new Rect(10, 10, infoTexture.width / 5f, infoTexture.height / 5f), infoTexture);
 		// Make a background box
+		
+		int x = 120;
 		if(gaingain == false){
-			GUI.Label (new Rect (10, 10, 100, 20), "Food: "+  foodAmount);
-			GUI.Label (new Rect (10, 25, 100, 20), "Ships: "+  shipsAmount);
+			GUI.Label (new Rect (x, 30, 100, 20), ""+  (int)foodAmount);
+			GUI.Label (new Rect (x, 70, 100, 20), ""+  (int)shipCount());
 		}
 		if (gaingain){
 			if(foodgain < 0){
-				GUI.Label (new Rect (10, 10, 100, 20), "Food: "+  foodAmount + " " + Mathf.Round(foodgain));
+				GUI.Label (new Rect (x, 30, 100, 20), ""+  (int)foodAmount + " " + Mathf.Round(foodgain));
 			}
 			if(foodgain >= 0){
-				GUI.Label (new Rect (10, 10, 100, 20), "Food: "+  foodAmount + " +" + Mathf.Round(foodgain));
+				GUI.Label (new Rect (x, 30, 100, 20), ""+  (int)foodAmount + " +" + Mathf.Round(foodgain));
 			}
 			if(shipgain < 0){
-				GUI.Label (new Rect (10, 25, 100, 20), "Ships: "+  shipsAmount + " " + shipgain);
+				GUI.Label (new Rect (x, 70, 100, 20), ""+  (int)shipCount() + " " + shipgain);
 			}
 			if(shipgain >= 0){
-				GUI.Label (new Rect (10, 25, 100, 20), "Ships: "+  shipsAmount + " +" + shipgain);
+				GUI.Label (new Rect (x, 70, 100, 20), ""+  (int)shipCount() + " +" + shipgain);
 			}
 		}
 		if (trigger)
@@ -376,6 +432,17 @@ public class Player : MonoBehaviour {
 			if(GUI.Button(new Rect((Screen.width-200), (Screen.height-100), 100, 60), "OK"))
             	trigger = false;
 		
+		if(!SolarSystem.timeRunning )
+		{
+			GUI.Label ( new Rect (x + 50, 30, 100, 20), " - "+ (int)calculateFoodCost(SolarSystem.timeAhead));
+		}
+		
+	}
+	
+	
+	float calculateFoodCost(float time)
+	{
+		return (shipsAmount*3 + 5) * time;
 	}
 		//if(started)
        		//Destroy(other.gameObject);
@@ -395,7 +462,7 @@ public class Player : MonoBehaviour {
 	public float calctime;
 	float calculateTime()
 	{
-		return(transform.position - destination).magnitude / speed; //Should be seconds until destination.
+		return(transform.position - destination).magnitude / realSpeed; //Should be seconds until destination.
 	}
 	
 	public void setDestination(Vector3 setting)
@@ -409,33 +476,30 @@ public class Player : MonoBehaviour {
 	{
 		SolarSystem.timeRunning = false;
 		SolarSystem.timeAhead = 0f;
+		destinationSet = false;
 	}
 	
 	//It'd be nice if there was some tweening on movement, so the ship would slow down gradually as approaching its goal
 	// Update is called once per frame
 	
 	Quaternion rotation;
-
+	
+	float realSpeed;
+	
+	bool destinationSet = false;
+	
 	void Update () {
-		if(changed){
-			prevship = shipsAmount;
-			gaingain = true;
-			prevtime = Time.time;
-			shipsAmount += 1;
-			changed = false;
-			fixAIShips();
-		}	
-		if(changed2){
-			prevship = shipsAmount;
-			gaingain = true;
-			prevtime = Time.time;
-			shipsAmount -= 1;
-			changed2 = false;
-			fixAIShips();
-		}	
 		LineRenderer lineRenderer = GetComponent<LineRenderer>();
 		lineRenderer.enabled = !SolarSystem.timeRunning;
 		
+		if(ships.Count > 4)
+		{
+			realSpeed = speed * (1f + ships.Count / 10f) ; //Gives a speedboost with more ships.
+		}
+		else
+		{
+			realSpeed = speed;
+		}
 		if(lineRenderer.enabled)
 		{
 			lineRenderer.SetVertexCount(2);
@@ -445,22 +509,26 @@ public class Player : MonoBehaviour {
 			SolarSystem.timeAhead = calculateTime();
 		}
 		
-		if(!SolarSystem.timeRunning && Input.GetMouseButton(0))
+		if(Input.GetMouseButton(0) && GUIUtility.hotControl == 0)
 		{
+			if(SolarSystem.timeRunning)
+			{
+				SolarSystem.timeRunning = false;
+			}
 			 Ray ray = Camera.main.ScreenPointToRay(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0));
 			 Plane p = new Plane(new Vector3(0,1,0), Vector3.zero);
 			 float distance;
 			 p.Raycast(ray, out distance);
 		 	 
 			 Vector3 pointHit = ray.GetPoint(distance);
-			
+			 destinationSet = true;
 			 setDestination(pointHit);
 		}
 		//Victory and loss conditions
-		if (foodAmount < 0) {
+		if (foodAmount < 0 || ships.Count == 0) {
 			defeatBool = true;	
 		}
-		else if(foodAmount > 10000) {
+		else if(foodAmount > 5000 || ships.Count > 30) {
 			victoryBool = true;
 		}
 		
@@ -478,37 +546,43 @@ public class Player : MonoBehaviour {
 			else if (controlBool) {
 				controlBool = false;
 			}
-			if (victoryBool || defeatBool) {
+			if (victoryBool || defeatBool && SolarSystem.timeRunning) {
 				Application.Quit();
 			}			
 		}
 		
 		if(SolarSystem.timeRunning)
 		{
-			if((transform.position - destination).magnitude > .2f)
+			if(destinationSet)
 			{
-				velocity = (destination - transform.position).normalized * speed;
-				rotation = Quaternion.AngleAxis(Mathf.Rad2Deg * Mathf.Atan2(-velocity.z, velocity.x) - 90, Vector3.up) *  Quaternion.AngleAxis(270, Vector3.right);
-			}
-			else
-			{
-				velocity = Vector3.zero;
-				transform.position = destination;
-				reachDestination();
+				if((transform.position - destination).magnitude > .2f)
+				{
+					velocity = (destination - transform.position).normalized * realSpeed;
+					rotation = Quaternion.AngleAxis(Mathf.Rad2Deg * Mathf.Atan2(-velocity.z, velocity.x) - 90, Vector3.up) ;
+				}
+				else
+				{
+					velocity = Vector3.zero;
+					transform.position = destination;
+					reachDestination();
+				}
 			}
 			
-			if(velocity.magnitude > speed)
+			if(velocity.magnitude > realSpeed)
 			{
-				velocity = velocity.normalized * speed;
+				velocity = velocity.normalized * realSpeed;
 			}
 		
 			
 			transform.rotation = rotation;
 			transform.position += velocity * Time.deltaTime;
-			counter++;
-			if(counter > 90f){
+			counter += Time.deltaTime;
+			
+			
+			foodAmount -= (shipsAmount*3 + 5) * Time.deltaTime; //Subtracts food
+			
+			if(counter >  2f){
 				counter = 0;
-				foodAmount -= shipsAmount*5 + 5;
 				foodgain -= shipsAmount*5 + 5;
 				gaingain = true;
 				prevtime = Time.time;

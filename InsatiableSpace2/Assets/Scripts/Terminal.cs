@@ -14,7 +14,7 @@ public class Terminal : MonoBehaviour {
 	static List<float> lifespan = new List<float>();
 	public GUISkin skin;
 	
-	public int rectHeight = 30;
+	public int rectHeight = 100;
 	public int rectWidth = 800;
 	
 	public int messageMax = 8;
@@ -44,9 +44,9 @@ public class Terminal : MonoBehaviour {
 		GUI.contentColor = Color.white;
 		GUI.skin = skin;
 		
-		for(int i = 0; i < messages.Count; i++)
+		for(int i = messages.Count - 1; i >= 0; i--)
 		{
-			if(i > messageMax - 3)
+			if(i < 3)
 			{
 				GUI.contentColor = Color.Lerp(Color.white, Color.clear, ((float)(i - messageMax)) / messageMax);
 			}
@@ -55,7 +55,8 @@ public class Terminal : MonoBehaviour {
 			{
 				GUI.contentColor = Color.Lerp(Color.clear, Color.white, lifespan[i]);
 			}
-			GUI.Label (new Rect (20, -40 + Screen.height + -rectHeight * i, rectWidth, rectHeight), messages[i]);
+			
+			GUI.Label (new Rect (20, -40 + Screen.height + -rectHeight * i, rectWidth * 10, rectHeight), messages[i]);
 		}
 		
 	}

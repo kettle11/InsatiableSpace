@@ -16,6 +16,9 @@ public class CameraFollow : MonoBehaviour {
 		display = offset;
 	}
 	
+	
+	bool zoomedOut = false;
+	
 	// Update is called once per frame
 	void Update () {
 		if(following != null)
@@ -27,12 +30,17 @@ public class CameraFollow : MonoBehaviour {
 			display = offset;
 		}
 		if(Input.GetKeyDown(KeyCode.DownArrow)){
-			display = offset.normalized * 200f;
-		}
-		if(Input.GetKeyUp(KeyCode.DownArrow)){
-			display = offset;
+			zoomedOut = !zoomedOut;
 		}
 		
+		if(zoomedOut)
+		{
+			display = offset.normalized * 150f;
+		}
+		else
+		{
+			display = offset;
+		}
 		display += -Input.GetAxis("Mouse ScrollWheel") * offset.normalized * scrollSpeed;
 		if(display.magnitude < offset.magnitude)
 		{

@@ -36,6 +36,7 @@ public class Planet : MonoBehaviour {
 			clone.renderer.enabled = false;
 		}
 		
+		foodAmount = foodGiven * Random.value * 10f;
 		this.enabled = true;
 	}
 	
@@ -61,7 +62,9 @@ public class Planet : MonoBehaviour {
 	[HideInInspector]
 	public float planetRandomizer;
 	public string planetType;
+	
 	public float foodGiven;
+	float foodAmount;
 	
 	float angle;
 	
@@ -74,38 +77,40 @@ public class Planet : MonoBehaviour {
 		
 		return orbiting.getPositionAtTimeAhead(timeAhead) + orbitRadius * new Vector3(Mathf.Cos(angle + timeAhead * orbitSpeed), 0, Mathf.Sin(angle + timeAhead * orbitSpeed));
 	}
+	
+	public float growthRate = 1f;
 	// Update is called once per frame
 	void Update () {
 		if(SolarSystem.timeRunning)
 		{
+			foodAmount += (currentShips * currentShips * Time.deltaTime * foodGiven) / 8f; //Generate food!
+			if(currentShips > 0 && !isMoon)
+			{
+				if(currentShips > totalShips)
+				{
+					totalShips -= ((randomShipTime * Time.deltaTime ) * growthRate) / 8f;
+				}
+				else
+				{
+					currentShips += (randomShipTime * Time.deltaTime * (currentShips / 4f) * (currentShips / totalShips)) * growthRate;
+				}
+				
+				if (totalShips == 2) {
+					Terminal.addMessage("A planet is close to destruction!", 0);
+					
+					//print("A planet is close to destruction");
+				}
+				if (totalShips == 0) {
+					Terminal.addMessage("A planet has been destroyed!", 0);
+					//print ("A planet has been destroyed");
+					Destroy(this.gameObject);
+					Destroy(clone.gameObject);
+				}
+			}
+			
 			if(orbiting != null)
 			{
-				timeRunning += Time.deltaTime;
-				if (timeRunning > randomShipTime) {
-					if (currentShips > 0) {
-						if (isDecaying == false) {
-							currentShips += 1;
-							if (currentShips >= totalShips) {
-								isDecaying = true;
-							}
-						}
-						else {
-							totalShips -= 1;
-							if (totalShips == 2) {
-								Terminal.addMessage("A planet is close to destruction!", 0);
-								
-								//print("A planet is close to destruction");
-							}
-							if (totalShips == 0) {
-								Terminal.addMessage("A planet has been destroyed!", 0);
-								//print ("A planet has been destroyed");
-								Destroy(this.gameObject);
-								Destroy(clone.gameObject);
-							}
-						}
-					}
-					timeRunning = 0;
-				}
+				
 				angle += orbitSpeed * Time.deltaTime;
 				transform.position = getPositionAtTimeAhead(0f);
 				if(angle > 2f * Mathf.PI)
@@ -129,7 +134,46 @@ public class Planet : MonoBehaviour {
 	public GUISkin skin;
 	public void touch(bool a){
 		istouching = a;
+		if(!a)
+		{
+			playerHere = false;
+		}
+		Player.currentPlayer.trigger = false;
 	}
+	
+	
+	public bool playerHere = false;
+	
+	public void landHere()
+	{
+		
+		if(!visited || currentShips == 0)
+		{
+			Terminal.addMessage("You forage the planet and find " + (int)foodAmount + " food.", 1);
+			if(!visited)
+			{
+				visited = true;
+				Player.currentPlayer.trigger = true;
+				Player.currentPlayer.triggerEvent(planetType);
+			}
+		}
+		else
+		{
+			Terminal.addMessage("Your colonists provide you with " + (int)foodAmount + " food.", 1);
+		}
+		
+		playerHere = true;
+		
+		
+		
+		Player.currentPlayer.foodAmount += foodAmount;
+		Player.currentPlayer.foodgain += foodAmount;
+		
+		foodAmount = 0;
+		Player.currentPlayer.gaingain = true;
+		Player.currentPlayer.prevtime = Time.time;
+	}
+	
 	void OnGUI () {
 		
 		if(isMoon)
@@ -139,38 +183,60 @@ public class Planet : MonoBehaviour {
 		
 		GUI.skin = skin;
 		//Vector2 size = GUI.skin.GetStyle("ProgressBarText").CalcSize(GUIContent(label));
-		Vector3 point = Camera.main.WorldToScreenPoint(transform.position);
+		Vector3 point = 
+			Camera.main.WorldToScreenPoint(transform.position + new Vector3(transform.localScale.x,0,0));
+		Vector3 point2 = 
+			Camera.main.WorldToScreenPoint(transform.position + new Vector3(0,0,transform.localScale.z)) - new Vector3(0,-10,0);
 		
 		if(Camera.main.pixelRect.Contains(point))
 		{
+		
 			if (istouching){
-				if (GUI.Button(new Rect(point.x, -point.y + Screen.height - 80, 200, 40), "Take Ship"))
+				if(playerHere)
 				{
-					if(currentShips > 0){
-						Player.change();
-						Player.shipgain += 1;
-						currentShips -= 1;
-						Terminal.addMessage("Deposited 1 ship onto planet.", 1);
-					}
+					if (currentShips >= 1 && GUI.Button(new Rect(point2.x , -point2.y + Screen.height - 100, 200, 40), "Take Ship"))
+					{
+						if(currentShips > 0){
+							currentShips -= 1;
+							Player.currentPlayer.addShip();
+							Terminal.addMessage("Took a ship from the planet.", 1);
+						}
+						Event.current.Use();
 					
-				
-				}
-				if (GUI.Button(new Rect(point.x, -point.y + Screen.height - 40, 200, 40), "Leave Ship"))
-				{
-					if(Player.shipsAmount > 0){
-						Player.change2();
-						Player.shipgain -= 1;
-						currentShips += 1;
-						Terminal.addMessage("Took 1 ship from planet.", 1);
 					}
-
+					if (Player.currentPlayer.shipCount() >= 2 && GUI.Button(new Rect(point2.x , -point2.y + Screen.height - 60, 200, 40), "Deposit Ship"))
+					{
+						if(Player.currentPlayer.shipCount() > 0){
+							Player.currentPlayer.removeShip();
+							currentShips += 1;
+							Terminal.addMessage("Deposited a ship onto the planet.", 1);
+						}
+						Event.current.Use();
+	
+					}
+				}
+				else
+				{
+					if(GUI.Button(new Rect(point2.x, -point2.y + Screen.height - 80, 200, 40), "Land on planet"))
+					{
+						landHere();
+					}
 				}
 			}
 			
-			GUI.Label (new Rect (point.x, -point.y + Screen.height, 200, 40), " " + currentShips + "/" + totalShips + " ");
+			if(visited)
+			{
+				GUI.Label (new Rect (point.x, -point.y + Screen.height -80 , 200, 40), "Food: ");
+				GUI.Label (new Rect (point.x, -point.y + Screen.height -40, 200, 40), " "+(int)foodAmount);
+				GUI.Label (new Rect (point.x, -point.y + Screen.height, 200, 40), " " + currentShips.ToString("F1") + "/" + totalShips.ToString("F1") + " ");
+			}
 		}
 		
 	}
+	
+	public float foodgain;
+	public static float shipgain;
+	public bool gaingain = false;
 	
 	public static int lineResolution = 30;
 	

@@ -30,30 +30,33 @@ public class AIShip : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	 	
-		destination = following.position + new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)) * radius;
-		angle += dir * 1f * Time.deltaTime;
-		Vector3 dif = destination - transform.position;
-		Vector3 distanceToShip = following.position - transform.position;
-		
-		if(following != null && distanceToShip.magnitude > calmRadius)
+		if(SolarSystem.timeRunning)
 		{
+			destination = following.position + new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)) * radius;
+			angle += dir * 1f * Time.deltaTime;
+			Vector3 dif = destination - transform.position;
+			Vector3 distanceToShip = following.position - transform.position;
 			
-			velocity += dif.normalized * acceleration * Time.deltaTime;
+			if(following != null && distanceToShip.magnitude > calmRadius)
+			{
+				
+				velocity += dif.normalized * acceleration * Time.deltaTime;
+			}
+			else
+			{
+				velocity -= velocity.normalized * acceleration * .08f * Time.deltaTime;
+			}
+			
+			if(velocity.magnitude > speed)
+			{
+				velocity = velocity.normalized * speed;
+			}
+			
+			if(velocity.magnitude > .2f)
+			{
+				transform.rotation = Quaternion.AngleAxis(Mathf.Rad2Deg * Mathf.Atan2(-velocity.z, velocity.x) - 90, Vector3.up) *  Quaternion.AngleAxis(270, Vector3.right);
+			}
+			transform.position += velocity * Time.deltaTime;
 		}
-		else
-		{
-			velocity -= velocity.normalized * acceleration * .08f * Time.deltaTime;
-		}
-		
-		if(velocity.magnitude > speed)
-		{
-			velocity = velocity.normalized * speed;
-		}
-		
-		if(velocity.magnitude > .2f)
-		{
-			transform.rotation = Quaternion.AngleAxis(Mathf.Rad2Deg * Mathf.Atan2(-velocity.z, velocity.x) - 90, Vector3.up) *  Quaternion.AngleAxis(270, Vector3.right);
-		}
-		transform.position += velocity * Time.deltaTime;
 	}
 }
