@@ -21,7 +21,7 @@ public class Planet : MonoBehaviour {
 	public bool isDecaying = false;	
 	[HideInInspector]
 	public float randomShipTime;
-	
+	public bool istouching = false;
 	// Use this for initialization
 	void Start () {
 		angle = Random.value * Mathf.PI * 2f;
@@ -124,6 +124,9 @@ public class Planet : MonoBehaviour {
 	}
 
 	public GUISkin skin;
+	public void touch(bool a){
+		istouching = a;
+	}
 	void OnGUI () {
 		
 		if(isMoon)
@@ -134,14 +137,24 @@ public class Planet : MonoBehaviour {
 		GUI.skin = skin;
 		//Vector2 size = GUI.skin.GetStyle("ProgressBarText").CalcSize(GUIContent(label));
 		Vector3 point = Camera.main.WorldToScreenPoint(transform.position);
-		
-		if (GUI.Button(new Rect(point.x, -point.y + Screen.height - 60, 200, 30), "Take Ship"))
-		{
-			currentShips -= 1;
-		}
-		if (GUI.Button(new Rect(point.x, -point.y + Screen.height - 30, 200, 30), "Add Ship"))
-		{
-			currentShips += 1;
+		if (istouching){
+			if (GUI.Button(new Rect(point.x, -point.y + Screen.height - 40, 100, 20), "Take Ship"))
+			{
+				if(currentShips > 0){
+					Player.change();
+					Player.shipgain += 1;
+					currentShips -= 1;
+				}
+			
+			}
+			if (GUI.Button(new Rect(point.x, -point.y + Screen.height - 20, 100, 20), "Add Ship"))
+			{
+				if(Player.shipsAmount > 0){
+					Player.change2();
+					Player.shipgain -= 1;
+					currentShips += 1;
+				}
+			}
 		}
 		
 		GUI.Label (new Rect (point.x, -point.y + Screen.height, 200, 30), " " + currentShips + "/" + totalShips + " ");
