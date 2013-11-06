@@ -28,7 +28,7 @@ public class Player : MonoBehaviour {
 	
 	public List<AIShip> ships= new List<AIShip>();
 	void Start () {
-		shipsAmount = 2; 
+		shipsAmount = 0; 
         for (int i = 0; i < shipsAmount; i++)
         {
             AIShip newShip = Instantiate(aiShip, transform.position, Quaternion.identity) as AIShip;
@@ -51,7 +51,7 @@ public class Player : MonoBehaviour {
 	
 	public void fixAIShips()
 	{
-		if (prevship == 0 && shipsAmount == 0){
+		if (prevship >= 0 && shipsAmount == 0){
 			return;
 		}
 		if (shipsAmount < 0){
@@ -381,7 +381,7 @@ public class Player : MonoBehaviour {
 	
 	
 	 
-	
+	public float calctime;
 	float calculateTime()
 	{
 		return(transform.position - destination).magnitude / speed; //Should be seconds until destination.
@@ -389,6 +389,7 @@ public class Player : MonoBehaviour {
 	
 	public void setDestination(Vector3 setting)
 	{
+		calctime = Time.time;
 		destination = setting;
 		SolarSystem.timeAhead = calculateTime();
 	}
