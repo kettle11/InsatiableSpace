@@ -91,7 +91,11 @@ public class Planet : MonoBehaviour {
 						}
 						else {
 							totalShips -= 1;
+							if (totalShips == 2) {
+								print("A planet is close to destruction");
+							}
 							if (totalShips == 0) {
+								print ("A planet has been destroyed");
 								Destroy(this.gameObject);
 								Destroy(clone.gameObject);
 							}
