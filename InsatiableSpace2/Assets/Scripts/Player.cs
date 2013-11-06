@@ -10,7 +10,7 @@ public class Player : MonoBehaviour {
 	public float speed = 5f;
 	public float acceleration = .1f;
 	public float foodAmount = 0;
-	public float shipsAmount = 0;
+	public static float shipsAmount = 0;
 	public Texture aTexture;
 	public float counter = 0;
 	public Texture titleTexture;
@@ -48,6 +48,14 @@ public class Player : MonoBehaviour {
 	}
 	
 	public AIShip aiShip;
+	public static bool changed = false;
+	public static bool changed2 = false;
+	public static void change(){
+		changed = true;
+	}
+	public static void change2(){
+		changed2 = true;
+	}
 	
 	public void fixAIShips()
 	{
@@ -88,6 +96,7 @@ public class Player : MonoBehaviour {
 	void OnTriggerEnter(Collider other) {
 		SolarSystem.timeRunning = false;
 		SolarSystem.timeAhead = 0f;
+		other.GetComponent<Planet>().touch(true);
 		// Freeze when touching any planet, we also need to set the destination to the current location when this happens
 		Planet otherPlanet = other.GetComponent<Planet>();
 		if(other && otherPlanet.cloned == false && otherPlanet.visited == false){
@@ -112,7 +121,7 @@ public class Player : MonoBehaviour {
 		}		
 	}
 	public float foodgain;
-	public float shipgain;
+	public static float shipgain;
 	public bool gaingain = false;
 	public void Makeevent(int type, float rng){
 		// apparently not every planet is given a type....
@@ -373,8 +382,10 @@ public class Player : MonoBehaviour {
     
 	 void OnTriggerExit( Collider other)
     {
+		other.GetComponent<Planet>().touch(false);
 		if(other){
 			trigger = false;
+			
 		}
     }
 	
@@ -406,7 +417,20 @@ public class Player : MonoBehaviour {
 	Quaternion rotation;
 
 	void Update () {
-	
+		if(changed){
+			gaingain = true;
+			prevtime = Time.time;
+			shipsAmount += 1;
+			changed = false;
+			fixAIShips();
+		}	
+		if(changed2){
+			gaingain = true;
+			prevtime = Time.time;
+			shipsAmount -= 1;
+			changed2 = false;
+			fixAIShips();
+		}	
 		LineRenderer lineRenderer = GetComponent<LineRenderer>();
 		lineRenderer.enabled = !SolarSystem.timeRunning;
 		
