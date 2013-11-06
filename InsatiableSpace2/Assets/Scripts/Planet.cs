@@ -4,8 +4,6 @@ using System.Collections;
 [RequireComponent (typeof (LineRenderer))]
 
 public class Planet : MonoBehaviour {
-	
-	bool started = false;
 
 	GameObject clone; //A clone planet used for rendering a preview of the future.
 	
@@ -27,7 +25,6 @@ public class Planet : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		angle = Random.value * Mathf.PI * 2f;
-		started = true;
 
 		//Sets up clone 
 		//To-fix: Frequently (always?) clones a clone of each clone.
@@ -66,9 +63,6 @@ public class Planet : MonoBehaviour {
 	public float foodGiven;
 	
 	float angle;
-	
-	float foodAvailable = 15f;
-	float peopleHere = 0f;
 	
 	public Vector3 getPositionAtTimeAhead(float timeAhead)
 	{
