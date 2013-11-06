@@ -406,6 +406,7 @@ public class Player : MonoBehaviour {
 				GUI.Label (new Rect (x, 70, 100, 20), ""+  (int)shipCount() + " +" + shipgain);
 			}
 		}
+		
 		int widthSet = aTexture.width;
 		int heightSet = aTexture.height;
 		
@@ -416,24 +417,24 @@ public class Player : MonoBehaviour {
         	GUI.DrawTexture(new Rect(x1,y1, widthSet, heightSet), aTexture);
 		if (titleBool) {
 			titleTexture = Resources.Load("title") as Texture;
-			GUI.DrawTexture(new Rect(x1,y1, widthSet, heightSet), titleTexture);
+			GUI.DrawTexture(new Rect(0,0, Screen.width, Screen.height), titleTexture);
 		}
 		if (storyBool) {
 			storyTexture = Resources.Load("story") as Texture;
-			GUI.DrawTexture(new Rect(x1,y1, widthSet, heightSet), storyTexture);
+			GUI.DrawTexture(new Rect(0,0, Screen.width, Screen.height), storyTexture);
 		}
 		if (controlBool) {
 			controlTexture = Resources.Load("controls") as Texture;
-			GUI.DrawTexture(new Rect(x1,y1, widthSet, heightSet), controlTexture);
+			GUI.DrawTexture(new Rect(0,0, Screen.width, Screen.height), controlTexture);
 		}
 		if (victoryBool) {
 			victoryTexture = Resources.Load("victory") as Texture;
-			GUI.DrawTexture(new Rect(x1,y1, widthSet, heightSet), victoryTexture);
+			GUI.DrawTexture(new Rect(0,0, Screen.width, Screen.height), victoryTexture);
 			trigger = false;
 		}
 		if (defeatBool) {
 			defeatTexture = Resources.Load("defeat") as Texture;
-			GUI.DrawTexture(new Rect(1, 0, widthSet, heightSet), defeatTexture);
+			GUI.DrawTexture(new Rect(0,0, Screen.width, Screen.height), defeatTexture);
 			trigger = false;
 		}
 		if (trigger)
