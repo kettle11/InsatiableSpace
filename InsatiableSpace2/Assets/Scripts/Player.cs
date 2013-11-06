@@ -12,7 +12,7 @@ public class Player : MonoBehaviour {
 	public float foodAmount = 0;
 	public float shipsAmount = 0;
 	public Texture aTexture;
-	
+	public float counter = 0;
 	public Texture titleTexture;
 	public bool titleBool = true;
 	public Texture storyTexture;
@@ -477,6 +477,14 @@ public class Player : MonoBehaviour {
 			
 			transform.rotation = rotation;
 			transform.position += velocity * Time.deltaTime;
+			counter++;
+			if(counter > 90f){
+				counter = 0;
+				foodAmount -= shipsAmount*5 + 5;
+				foodgain -= shipsAmount*5;
+				gaingain = true;
+				prevtime = Time.time;
+			}
 		}
 	}
 }
