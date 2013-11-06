@@ -12,6 +12,7 @@ public class Planet : MonoBehaviour {
 	
 	public GameObject planetPreview;
 	
+	AudioSource odio;
 	
 	public float currentShips = 2;
 	public float totalShips = 12;
@@ -25,7 +26,7 @@ public class Planet : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		angle = Random.value * Mathf.PI * 2f;
-
+		odio = gameObject.AddComponent<AudioSource>();
 		//Sets up clone 
 		//To-fix: Frequently (always?) clones a clone of each clone.
 		if(!cloned)
@@ -144,6 +145,8 @@ public class Planet : MonoBehaviour {
 					Player.change();
 					Player.shipgain += 1;
 					currentShips -= 1;
+					odio.clip = Resources.Load("Sounds/take") as AudioClip;
+					odio.Play();
 				}
 			
 			}
@@ -153,6 +156,8 @@ public class Planet : MonoBehaviour {
 					Player.change2();
 					Player.shipgain -= 1;
 					currentShips += 1;
+					odio.clip = Resources.Load("Sounds/add") as AudioClip;
+					odio.Play();
 				}
 			}
 		}
