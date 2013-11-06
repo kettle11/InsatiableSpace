@@ -18,7 +18,7 @@ public class Player : MonoBehaviour {
 	public bool storyBool = false;
 	public Texture controlTexture;
 	public bool controlBool = false;
-	
+	public float prevtime = 0f;
 	public Texture victoryTexture;
 	public bool victoryBool = false;
 	public Texture defeatTexture;
@@ -202,7 +202,6 @@ public class Player : MonoBehaviour {
 			foodgain *= -1;
 		}
 		if (state == 2){
-			Random random = new Random();
 			float randomNumber = (Random.value * 200)+200;
 			foodgain= randomNumber;
 			if (type == 1 || type == 4){
@@ -213,7 +212,6 @@ public class Player : MonoBehaviour {
 			
 		}
 		if (state == 3){
-			Random random = new Random();
 			float randomNumber = (Random.value * 100);
 			if (randomNumber < 80)
 				shipgain = -1f;
@@ -222,7 +220,6 @@ public class Player : MonoBehaviour {
 			
 		}
 		if (state == 4){
-			Random random = new Random();
 			float randomNumber = (Random.value * 100);
 			if (randomNumber < 70)
 				shipgain = 1f;
@@ -231,7 +228,6 @@ public class Player : MonoBehaviour {
 			
 		}
 		if (state == 5){
-			Random random = new Random();
 			float randomNumber = (Random.value * 200);
 			foodgain= -1f * randomNumber;
 			float randomNumber2 = (Random.value * 100);
@@ -242,7 +238,6 @@ public class Player : MonoBehaviour {
 			
 		}
 		if (state == 6){
-			Random random = new Random();
 			float randomNumber = (Random.value * 200);
 			foodgain= 1f * randomNumber;
 			float randomNumber2 = (Random.value * 100);
@@ -252,7 +247,6 @@ public class Player : MonoBehaviour {
 				shipgain = 2f;
 		}
 		if (state == 7){
-			Random random = new Random();
 			float randomNumber = (Random.value * 200);
 			foodgain= 1f * randomNumber;
 			float randomNumber2 = (Random.value * 100);
@@ -262,7 +256,6 @@ public class Player : MonoBehaviour {
 				shipgain = -2f;
 		}
 		if (state == 8){
-			Random random = new Random();
 			float randomNumber = (Random.value * 200);
 			foodgain= -1f * randomNumber;
 			float randomNumber2 = (Random.value * 100);
@@ -276,8 +269,12 @@ public class Player : MonoBehaviour {
 		foodAmount += Mathf.Round(foodgain);
 		if (shipsAmount < 0)
 			shipsAmount = 0;
+		prevtime = Time.time;
 	}
 	void OnGUI () {
+		if((Time.time - prevtime) > 5f){
+			gaingain = false;
+		}
 		// Make a background box
 		if(gaingain == false){
 			GUI.Label (new Rect (10, 10, 100, 20), "Food: "+  foodAmount);
